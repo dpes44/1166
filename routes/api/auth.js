@@ -342,6 +342,18 @@ authRouter.post("/guest/login", async (req, res, next) => {
       roles: ["63527da890113e06ec9965b3"],
     });
 
+    const user = await NSPH_DB.Users.findById(newUser._id).populate([
+      {
+        path: "permission",
+        model: "permission",
+        select: "name",
+      },
+      {
+        path: "roles",
+        select: "name permission",
+        populate: { path: "permission", model: "permission", select: "name" },
+      },
+    ]);
     const token = jwt.sign(
       { username: username },
       process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
@@ -351,7 +363,7 @@ authRouter.post("/guest/login", async (req, res, next) => {
     );
 
     res.json({
-      user: newUser,
+      user: user,
       token: token,
     });
   } catch (err) {
