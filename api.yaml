@@ -10,8 +10,8 @@ info:
     name: Apache 2.0
     url: "http://apache.org/"
 servers:
-  - url: "http://localhost:8082"
-  - url: "https://leanq.com.np"
+  - url: "nsphbe.leanq.com.np"
+  # - url: "https://leanq.com.np"
 tags: 
   - name: User
   - description: API for User CRUD Operation
