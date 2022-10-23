@@ -1,0 +1,116 @@
+openapi: 3.0.3
+info:
+  title: 1166 National Suicide Prevention Helpline
+  description: |-
+    This is a 1166 NSPH API Documentaion
+  version: 1.0
+  contact:
+    email: pramod.th244@gmail.com
+  liscence:
+    name: Apache 2.0
+    url: "http://apache.org/"
+servers:
+  - url: "http://localhost:8082"
+  - url: "https://leanq.com.np"
+tags: 
+  - name: User
+  - description: API for User CRUD Operation
+
+paths:
+  /api/auth/guest/login:
+    post:
+      tags:
+        - User
+      summary: Returns a Json with user details and token
+      description: Anonymous User Login
+      requestBody:
+        description: Login Anonymous User
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        200:
+          description: Success
+          schema:
+            type: string
+            example:
+              user: 
+                id: "62ed087313542d3a8ce04e86"
+                status: "Active"
+                roles: ["63527da890113e06ec9965b3"]
+                permission: []
+                _id: "635415908cc27507f43ce0da"
+                username: "guest1234"
+                date: "2022-10-22T16:08:48.153Z"
+                createdAt: "2022-10-22T16:08:48.162Z"
+                updatedAt: "2022-10-22T16:08:48.162Z"
+                __v: 0
+              token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imd1ZXN0MTIzNCIsImlhdCI6MTY2NjQ1NDkyOCwiZXhwIjoxNjczNjU0OTI4fQ.yup7BxIj1-nVlNv2iCI64fndYE6ZTiV-S2BBacGZ0GY"
+        400:
+          description: User Error
+        403:
+          description: Error
+  # /json:
+  #   get:
+  #     summary: Returns a Json with user details and token
+  #     description: Facebook login
+  #     responses:
+  #       200:
+  #         description: Success
+  #         schema:
+  #           type: string
+  #           example:
+  #             user: 
+  #               id: "62ed087313542d3a8ce04e86"
+  #               status: "Active"
+  #               roles: ["63527da890113e06ec9965b3"]
+  #               permission: []
+  #               _id: "635415908cc27507f43ce0da"
+  #               username: "guest1234"
+  #               date: "2022-10-22T16:08:48.153Z"
+  #               createdAt: "2022-10-22T16:08:48.162Z"
+  #               updatedAt: "2022-10-22T16:08:48.162Z"
+  #               __v: 0
+  #             token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imd1ZXN0MTIzNCIsImlhdCI6MTY2NjQ1NDkyOCwiZXhwIjoxNjczNjU0OTI4fQ.yup7BxIj1-nVlNv2iCI64fndYE6ZTiV-S2BBacGZ0GY"
+  #       400:
+  #         description: User Error
+  #       403:
+  #         description: Error
+
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          format: string
+          example: "pramod_12" 
+    # UserTest:
+    #   type: object
+    #   properties:
+    #     id:
+    #       type: string
+    #       format: string
+    #       example: "62ed087313542d3a8ce04e86"
+    #     name:
+    #       type: string
+    #       format: string
+    #       example: "Jatin Verma"
+    #     email:
+    #       type: string
+    #       example: user@gmail.com
+    #     password:
+    #       type: string
+    #       example: HASHString
+    #     confirm_password:
+    #       type: string
+    #       example: "https://image-url.com/path/to/file.png"  
+

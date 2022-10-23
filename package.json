@@ -1,0 +1,50 @@
+{
+  "name": "1166-sh",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "app": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nurislam03/MERN_A_to_Z.git"
+  },
+  "author": "Nur Islam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nurislam03/MERN_A_to_Z/issues"
+  },
+  "homepage": "https://github.com/nurislam03/MERN_A_to_Z#readme",
+  "dependencies": {
+    "@xmpp/client": "^0.13.1",
+    "@xmpp/debug": "^0.13.0",
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "child_process": "^1.0.2",
+    "config": "^3.3.7",
+    "connect-mongodb-session": "^3.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.17.3",
+    "greenlock-express": "^4.0.3",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.15",
+    "nodemailer": "^6.7.7",
+    "shell-exec": "^1.1.2",
+    "stanza": "^12.18.0",
+    "swagger-ui-express": "^4.5.0",
+    "tslib": "^2.4.0",
+    "validation": "0.0.1",
+    "validator": "^13.7.0",
+    "xmpp-bosh-client": "^0.4.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
