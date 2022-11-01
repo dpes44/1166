@@ -37,6 +37,12 @@ app.use(express.static("public"));
 // Connect Database
 connectDB();
 
+app.get('*', function (req, res, next) {
+  if (req.url.indexOf('/api') === 0) next();
+  else res.sendFile(__dirname + '/public/index.html');
+});
+
+
 app.get("/", (req, res) => res.send("Hello world!"));
 
 //setting up cors
