@@ -327,7 +327,7 @@ authRouter.post("/editProfile", authMiddleware, async (req, res) => {
   }
 });
 
-authRouter.post("/guest/login", async (req, res, next) => {
+authRouter.post("/guest/register", async (req, res, next) => {
   try {
     const { username } = req.body;
     const oldUser = await NSPH_DB.Users.findOne({

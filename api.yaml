@@ -17,7 +17,7 @@ tags:
   - description: API for User CRUD Operation
 
 paths:
-  /api/auth/guest/login:
+  /api/auth/guest/register:
     post:
       tags:
         - User
