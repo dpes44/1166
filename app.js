@@ -42,9 +42,6 @@ app.get('*', function (req, res, next) {
   else res.sendFile(__dirname + '/public/index.html');
 });
 
-
-app.get("/", (req, res) => res.send("Hello world!"));
-
 //setting up cors
 app.use(cors("*"));
 //API Start

@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.786ee73a.css",
-    "main.js": "/static/js/main.f9603aee.js",
+    "main.css": "/static/css/main.67fdd1d3.css",
+    "main.js": "/static/js/main.76a7158d.js",
     "static/media/fa-solid-900.svg": "/static/media/fa-solid-900.0454203f26b33fc02e2b.svg",
     "static/media/fa-brands-400.svg": "/static/media/fa-brands-400.991c1c761fc31f9c3252.svg",
     "static/media/Inter-Bold.ttf": "/static/media/Inter-Bold.88fa7ae373b07b41ecce.ttf",
@@ -9,7 +9,7 @@
     "static/media/Inter-Regular.ttf": "/static/media/Inter-Regular.e89cb19905e7db5591b0.ttf",
     "static/media/fa-solid-900.eot": "/static/media/fa-solid-900.6606667d9800a27eb8b5.eot",
     "static/media/fa-solid-900.ttf": "/static/media/fa-solid-900.915a0b79c22a1c1f64da.ttf",
-    "static/media/nucleo-icons.svg": "/static/media/nucleo-icons.e8827b8a8e3df089befd.svg",
+    "static/media/nucleo-icons.svg": "/static/media/nucleo-icons.6ff448a36d590360ffd6.svg",
     "static/media/fa-regular-400.svg": "/static/media/fa-regular-400.f3187c7462849ed261a8.svg",
     "static/media/fa-brands-400.eot": "/static/media/fa-brands-400.98f20b9ec79b2fee02a3.eot",
     "static/media/fa-brands-400.ttf": "/static/media/fa-brands-400.330e879afe4a0abb35f2.ttf",
@@ -35,7 +35,7 @@
     "index.html": "/index.html"
   },
   "entrypoints": [
-    "static/css/main.786ee73a.css",
-    "static/js/main.f9603aee.js"
+    "static/css/main.67fdd1d3.css",
+    "static/js/main.76a7158d.js"
   ]
 }
