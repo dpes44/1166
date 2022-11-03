@@ -109,9 +109,8 @@ router.post("/create", async (req, res, next) => {
 
     var comm =
       "sudo /usr/bin/prosodyctl register " +
-      req.body.email.substring(0, req.body.email.indexOf("@")) +
-      " chat.leanq.com.np " +
-      req.body.password;
+      req.body.username +
+      "@chat2.leanq.com.np 1166"
 
     exec(comm, (error, stdout, stderr) => {
       if (error) {
