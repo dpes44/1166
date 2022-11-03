@@ -122,7 +122,7 @@ router.post("/create", async (req, res, next) => {
       "1166",
     ];
 
-    exec(command, (error, pid, result) => {
+    sudo.exec(command, (error, pid, result) => {
       if (error) {
         console.log("error:", error.message);
       }
