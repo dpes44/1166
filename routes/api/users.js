@@ -1,5 +1,5 @@
 // routes/api/books.js
-
+const sudo = require("sudo-js");
 const { exec } = require("child_process");
 const express = require("express");
 const router = express.Router();
@@ -110,16 +110,26 @@ router.post("/create", async (req, res, next) => {
     var comm =
       "sudo /usr/bin/prosodyctl register " +
       req.body.username +
-      "@chat2.leanq.com.np 1166"
+      "@chat2.leanq.com.np 1166";
 
-    exec(comm, (error, stdout, stderr) => {
+    sudo.setPassword("1166");
+
+    var command = [
+      "sudo",
+      "/usr/bin/prosodyctl",
+      "register",
+      `${req.body.username}@chat2.leanq.com.np`,
+      "1166",
+    ];
+
+    exec(command, (error, pid, result) => {
       if (error) {
         console.log("error:", error.message);
       }
-      if (stderr) {
-        console.log("stderr:", stderr);
+      if (pid) {
+        console.log("pid:", pid);
       }
-      console.log("stdout:", stdout);
+      console.log("stdout:", result);
     });
     res.status(200).json(user);
     // res.status(200).json([]);

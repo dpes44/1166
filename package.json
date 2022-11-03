@@ -37,6 +37,7 @@
     "nodemailer": "^6.7.7",
     "shell-exec": "^1.1.2",
     "stanza": "^12.18.0",
+    "sudo-js": "^1.0.2",
     "swagger-ui-express": "^4.5.0",
     "tslib": "^2.4.0",
     "validation": "0.0.1",
