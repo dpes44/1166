@@ -4,17 +4,17 @@ const mongoose = require("mongoose");
 
 const CallLogSchema = new mongoose.Schema(
   {
-    facillator: { type: mongoose.Types.ObjectId, ref: "user", required: true },
+    facilitator: { type: mongoose.Types.ObjectId, ref: "user", required: true },
     user: { type: mongoose.Types.ObjectId, ref: "user", required: false },
     duration: {
-      type: Number,
+      type: String,
+      required:[true, "Duration is required"]
+    },
+    date: {
+      type: Date,
     },
     callFrom: { type: mongoose.Types.ObjectId, ref: "user", required: false },
     callTo: { type: mongoose.Types.ObjectId, ref: "user", required: false },
-    date: {
-      type: Date,
-      default: Date.now,
-    },
     comment: {
       type: String,
     },

@@ -332,17 +332,7 @@ authRouter.post("/guest/register", async (req, res, next) => {
     const { username } = req.body;
     const oldUser = await NSPH_DB.Users.findOne({
       username: username,
-    });
-    if (oldUser) {
-      throw { status: 402, msg: "Username already exists." };
-    }
-
-    const newUser = await NSPH_DB.Users.create({
-      username: username,
-      roles: ["63527da890113e06ec9965b3"],
-    });
-
-    const user = await NSPH_DB.Users.findById(newUser._id).populate([
+    }).populate([
       {
         path: "permission",
         model: "permission",
@@ -354,18 +344,51 @@ authRouter.post("/guest/register", async (req, res, next) => {
         populate: { path: "permission", model: "permission", select: "name" },
       },
     ]);
-    const token = jwt.sign(
-      { username: username },
-      process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
-      {
-        expiresIn: "2000h",
-      }
-    );
 
-    res.json({
-      user: user,
-      token: token,
-    });
+    if (oldUser) {
+      const token = jwt.sign(
+        { username: username },
+        process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
+        {
+          expiresIn: "2000h",
+        }
+      );
+
+      res.json({
+        user: oldUser,
+        token: token,
+      });
+    } else {
+      const newUser = await NSPH_DB.Users.create({
+        username: username,
+        roles: ["63527da890113e06ec9965b3"],
+      });
+
+      const user = await NSPH_DB.Users.findById(newUser._id).populate([
+        {
+          path: "permission",
+          model: "permission",
+          select: "name",
+        },
+        {
+          path: "roles",
+          select: "name permission",
+          populate: { path: "permission", model: "permission", select: "name" },
+        },
+      ]);
+      const token = jwt.sign(
+        { username: username },
+        process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
+        {
+          expiresIn: "2000h",
+        }
+      );
+
+      res.json({
+        user: user,
+        token: token,
+      });
+    }
   } catch (err) {
     console.log("error is", err);
     next(err);
