@@ -57,11 +57,28 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    phone: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
     status: {
       type: String,
       enum: ["Active", "Pending"],
       default: "Active",
     },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other"],
+      },
+      province: {
+        type:String,
+      },
+    ageGroup: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "agegroup"
+      },
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,

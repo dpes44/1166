@@ -15,6 +15,7 @@ const CallLogSchema = new mongoose.Schema(
     },
     callFrom: { type: mongoose.Types.ObjectId, ref: "user", required: false },
     callTo: { type: mongoose.Types.ObjectId, ref: "user", required: false },
+    shift: { type: mongoose.Types.ObjectId, ref: "shift", required: false },
     comment: {
       type: String,
     },
