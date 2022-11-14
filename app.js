@@ -37,9 +37,9 @@ app.use(express.static("public"));
 // Connect Database
 connectDB();
 
-app.get('*', function (req, res, next) {
-  if (req.url.indexOf('/api') === 0) next();
-  else res.sendFile(__dirname + '/public/index.html');
+app.get("*", function (req, res, next) {
+  if (req.url.indexOf("/api") === 0) next();
+  else res.sendFile(__dirname + "/public/index.html");
 });
 
 //setting up cors
@@ -58,7 +58,7 @@ app.use(
   require("./routes/api/data/calltype")
 );
 app.use("/api/shift", authMiddleware, require("./routes/api/data/shift"));
-app.use("/api/call-log", authMiddleware, require("./routes/api/call"))
+app.use("/api/call-log", authMiddleware, require("./routes/api/call"));
 app.use("/api/permission", require("./routes/api/permission"));
 app.use("/api/auth", require("./routes/api/auth"));
 //API End
@@ -81,7 +81,11 @@ app.listen(port, () => console.log(`Server running on port ${port}`));
 
 //error handler middleware
 app.use(function (err, req, res, next) {
-  const status = err.status || 500;
+  const status = err.status || 422;
   const errMsg = err.errMsg || err;
-  res.status(status).json({ errMsg });
+  res.status(status).json({
+    message: "Validation error",
+    status: err.status || 422,
+    error: err,
+  });
 });

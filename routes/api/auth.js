@@ -16,6 +16,7 @@ const User = require("../../models/Users");
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = require("../../middleware/auth");
+const { returnResponse } = require("../../helper/response.helper");
 
 // @route GET api/User/test
 // @description tests User route
@@ -332,18 +333,20 @@ authRouter.post("/guest/register", async (req, res, next) => {
     const { username } = req.body;
     const oldUser = await NSPH_DB.Users.findOne({
       username: username,
-    }).populate([
-      {
-        path: "permission",
-        model: "permission",
-        select: "name",
-      },
-      {
-        path: "roles",
-        select: "name permission",
-        populate: { path: "permission", model: "permission", select: "name" },
-      },
-    ]);
+    })
+    
+    // .populate([
+    //   {
+    //     path: "permission",
+    //     model: "permission",
+    //     select: "name",
+    //   },
+    //   {
+    //     path: "roles",
+    //     select: "name permission",
+    //     populate: { path: "permission", model: "permission", select: "name" },
+    //   },
+    // ]);
 
     if (oldUser) {
       throw {
@@ -388,10 +391,7 @@ authRouter.post("/guest/register", async (req, res, next) => {
       }
     );
 
-    res.json({
-      user: user,
-      token: token,
-    });
+   return  returnResponse(res, {user: user, token: token});
   } catch (err) {
     console.log("error is", err);
     next(err);
