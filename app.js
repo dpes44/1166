@@ -34,7 +34,7 @@ app.use(express.static("public"));
 //bitbucket paasword: ATBB7eZABC3Tq6L9eDXqscuBALCvBF18AB74
 // var userRouter = express.Router();
 
-// Connect Database
+// Connect Database 
 connectDB();
 
 app.get("*", function (req, res, next) {

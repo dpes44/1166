@@ -7,6 +7,7 @@ const hash = require("../../helper/hashpassword");
 
 // Load User model
 const User = require("../../models/Users");
+const { returnResponse } = require("../../helper/response.helper");
 
 // @route GET api/User/test
 // @description tests User route
@@ -23,6 +24,39 @@ router.get("/user", (req, res) => {
   }
 });
 
+router.get("/facilitators", async (req, res, next) => {
+  try {
+    // NSPH_DB.Users.find({
+    //   roles: { name: { $in: ["Facilitator"] } },
+    // })
+    //   .populate("roles", "name")
+    //   .exec(function (err, facilitators) {
+    //     if (err) {
+    //       console.log("error is thr", err);
+    //       throw err;
+    //     }
+    //     console.log("Faciliators ", facilitators);
+    //     return returnResponse(res, facilitators);
+    //   });
+
+    const result = await NSPH_DB.Users.aggregate([
+      {
+        $lookup: {
+          from: "roles",
+          localField: "roles",
+          foreignField: "_id",
+          as: "roles",
+        },
+      },
+      { $unwind: { path: "$roles" } },
+      { $match: { "roles.name": "Facilitator" } },
+    ]);
+    return returnResponse(res, result);
+  } catch (err) {
+    console.log("error is", err);
+    next(err);
+  }
+});
 // @route GET api/User
 // @description Get all User
 // @access Public
