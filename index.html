@@ -16,7 +16,11 @@
 
 
     <script>
-        const socket = io('http://localhost:8082');
+        const socket = io('http://localhost:8082', {
+            extraHeaders: {
+                "x-access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IldXRjUiLCJpYXQiOjE2Njg1MDg4MTMsImV4cCI6MTY3NTcwODgxM30.fYrkX2LNlMTdAzihxxW0XD1sIc8NWNYEmtDnwoH-AFo"
+            }
+        });
         socket.on('connect', () => {
             console.log('connected');
         });
