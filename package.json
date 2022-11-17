@@ -36,6 +36,7 @@
     "mongoose": "^5.13.15",
     "nodemailer": "^6.7.7",
     "shell-exec": "^1.1.2",
+    "socket.io": "^4.5.3",
     "stanza": "^12.18.0",
     "sudo-js": "^1.0.2",
     "swagger-ui-express": "^4.5.0",

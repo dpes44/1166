@@ -51,6 +51,7 @@ router.get("/facilitators", async (req, res, next) => {
       { $unwind: { path: "$roles" } },
       { $match: { "roles.name": "Facilitator" } },
     ]);
+    
     return returnResponse(res, result);
   } catch (err) {
     console.log("error is", err);

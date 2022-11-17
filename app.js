@@ -77,8 +77,8 @@ app.use("*", (req, res) => {
   });
 });
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
-
+let server = app.listen(port, () => console.log(`Server running on port ${port}`));
+require("./socket")(server);
 //error handler middleware
 app.use(function (err, req, res, next) {
   const status = err.status || 422;
@@ -89,3 +89,5 @@ app.use(function (err, req, res, next) {
     error: err,
   });
 });
+
+
