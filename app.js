@@ -44,6 +44,7 @@ app.get("*", function (req, res, next) {
 
 //setting up cors
 app.use(cors("*"));
+
 //API Start
 app.use("/api/user", authMiddleware, require("./routes/api/users"));
 app.use("/api/role", authMiddleware, require("./routes/api/role"));
