@@ -98,7 +98,7 @@ router.get("/roster/:userId", async (req, res, next) => {
   try {
     const datas = await NSPH_DB.ChatList.find({
       $or: [{ userOne: req.params.userId }, { userTwo: req.user._id }],
-    }).populate("userOne").populate("userTwo").sort({ createdAt: 1 });
+    }).populate("userOne", "username email _id").populate("userTwo", "username email _id").sort({ createdAt: 1 });
 
     const rosters = datas.map(function(user) {
       return user.userOne._id == req.params.userId ? user.userTwo : user.userOne;

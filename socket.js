@@ -44,7 +44,7 @@ module.exports = function (server) {
 
       const newUser = await user.save();
       console.log("new user is ", newUser);
-      //   socket.user = user;
+        socket.user = user;
       next();
     } catch (error) {
       console.log(error);
@@ -65,7 +65,7 @@ module.exports = function (server) {
         {
           _id: data.to,
         },
-        { username: 1, socketId: 1 }
+        { username: 1, socketId: 1, email:1 }
       );
 
       NSPH_DB.ChatList.findOne({
@@ -82,10 +82,15 @@ module.exports = function (server) {
             userOne: data.from,
             userTwo: data.to,
           });
+          io.to(user.socketId).emit("new-roster", socket.user);
         })
         .catch((err) => {});
 
-      io.to(user.socketId).emit("receive-msg", { body: data.message || data.body, from:data.from, to: data.to });
+      io.to(user.socketId).emit("receive-msg", {
+        body: data.message || data.body,
+        from: data.from,
+        to: data.to,
+      });
     });
 
     socket.on("disconnect", () => {
