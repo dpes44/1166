@@ -26,7 +26,8 @@ module.exports = function (server) {
         console.log("User connected with", data.id);
 
         // updated user with new socket id 
-        io.on('message', (data) => {
+        data.on('message', (data) => {
+            console.log("message is", data)
             io.emit('send_msg', { message: 'Hello from client' });
           });
         data.on("disconnect", () => {
