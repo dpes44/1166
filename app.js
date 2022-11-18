@@ -62,6 +62,7 @@ app.use("/api/shift", authMiddleware, require("./routes/api/data/shift"));
 app.use("/api/call-log", authMiddleware, require("./routes/api/call"));
 app.use("/api/permission", require("./routes/api/permission"));
 app.use("/api/auth", require("./routes/api/auth"));
+app.use("/api/message", authMiddleware, require("./routes/api/message"));
 //API End
 
 const port = process.env.PORT || 8082;

@@ -91,7 +91,7 @@ authRouter.post("/register", async (req, res) => {
   bcrypt.hash(password, 7, async (err, hash) => {
     if (err) {
       return res.status(400).json({ msg: "Error saving the password" });
-    }
+    } 
     newUser.password = hash;
     const isUserSaved = await newUser.save();
 

@@ -51,7 +51,7 @@ router.get("/facilitators", async (req, res, next) => {
       { $unwind: { path: "$roles" } },
       { $match: { "roles.name": "Facilitator" } },
     ]);
-    
+
     return returnResponse(res, result);
   } catch (err) {
     console.log("error is", err);
@@ -75,20 +75,36 @@ router.get("/", (req, res) => {
 // get all users in the database
 router.get("/list", async (req, res, next) => {
   try {
-    const users = await NSPH_DB.Users.find({
-      email: { $nin: [req.user.email] },
-    })
-      .populate([
-        {
-          path: "roles",
-          select: "name",
-        },
-      ])
-      .sort({ createdAt: -1 });
+    const users = await NSPH_DB.Users.find(
+      {
+        email: { $nin: [req.user.email] },
+      },
+      {
+        username: 1,
+        email: 1,
+        name: 1,
+        createdAt: 1,
+      }
+    ).sort({ createdAt: -1 });
 
-    res.status(200).json(users);
+    return returnResponse(res, users);
   } catch (err) {
     console.log("error is", err);
+    next(err);
+  }
+});
+
+router.get("/roster/:userId", async (req, res, next) => {
+  try {
+    const datas = await NSPH_DB.ChatList.find({
+      $or: [{ userOne: req.params.userId }, { userTwo: req.user._id }],
+    }).populate("userOne").populate("userTwo").sort({ createdAt: 1 });
+
+    const rosters = datas.map(function(user) {
+      return user.userOne._id == req.params.userId ? user.userTwo : user.userOne;
+    })
+    return returnResponse(res, rosters);
+  } catch (err) {
     next(err);
   }
 });

@@ -11,6 +11,11 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    socketId: {
+      type: String,
+      unique: true,
+      required: false,
+    },
     firstname: {
       type: String,
       required: false,
@@ -71,14 +76,14 @@ const UserSchema = new mongoose.Schema(
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
-      },
-      province: {
-        type:String,
-      },
+    },
+    province: {
+      type: String,
+    },
     ageGroup: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "agegroup"
-      },
+      ref: "agegroup",
+    },
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,
