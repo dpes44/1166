@@ -57,21 +57,21 @@ module.exports = function (server) {
 
     socket.on("send-msg", async (data) => {
       NSPH_DB.Messages.create({
-        sender: data.from,
-        receiver: data.to,
+        sender: data.from || data.sender,
+        receiver: data.to || data.receiver,
         body: data.message || data.body,
       });
       const user = await NSPH_DB.Users.findOne(
         {
-          _id: data.to,
+          _id: data.to || data.receiver,
         },
         { username: 1, socketId: 1, email:1 }
       );
 
       NSPH_DB.ChatList.findOne({
         $or: [
-          { userOne: data.from, userTwo: data.to },
-          { userOne: data.to, userTwo: data.from },
+          { userOne: data.from || data.sender, userTwo: data.to || data.receiver },
+          { userOne: data.to || data.sender, userTwo: data.from || data.receiver},
         ],
       })
         .then((chat) => {
@@ -79,8 +79,8 @@ module.exports = function (server) {
             return null;
           }
           NSPH_DB.ChatList.create({
-            userOne: data.from,
-            userTwo: data.to,
+            userOne: data.from || data.sender,
+            userTwo: data.to || data.receiver,
           });
           io.to(user.socketId).emit("new-roster", socket.user);
         })
@@ -88,8 +88,8 @@ module.exports = function (server) {
 
       io.to(user.socketId).emit("receive-msg", {
         body: data.message || data.body,
-        from: data.from,
-        to: data.to,
+        from: data.from || data.sender,
+        to: data.to || data.receiver,
       });
     });
 
