@@ -8,7 +8,7 @@ const checkTokenMiddleware = async (socket, next) => {
         next();
     } catch (error) {
         console.log(error);
-        next(new Error(error.msg || "Invalid User"));
+        next(new Error(error.msg || "Invalid User from middleware"));
     }
 }
 

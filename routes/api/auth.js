@@ -263,7 +263,7 @@ authRouter.post("/login", async (req, res) => {
 
   if (mathPassword) {
     const token = jwt.sign(
-      { user_id: user._id, email },
+      { user_id: user._id, email, username:user.username },
       process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
       {
         expiresIn: "2000h",

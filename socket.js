@@ -27,6 +27,8 @@ module.exports = function (server) {
                 receiver: data.to || data.receiver,
                 body: data.message || data.body,
             });
+            console.log("message is ", message);
+            console.log("socket id is ", await NSPH_DB.Users.getSocketId(data.to || data.receiver));
             // emit message to  user 
             io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit("receive-msg", message);
             // find or create chat list 
