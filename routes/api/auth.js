@@ -387,7 +387,7 @@ authRouter.post("/guest/register", async (req, res, next) => {
       { username: username },
       process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
       {
-        expiresIn: "2000h",
+        expiresIn: "7d",
       }
     );
     console.log("new guest user is", user);

@@ -20,4 +20,23 @@ const ChatSchema = new mongoose.Schema(
   }
 );
 
+// add function 
+ChatSchema.statics.findOrCreate = function (userOne, userTwo) {
+  const Chat = this;
+  return Chat.findOne({
+    $or: [
+      { userOne: userOne, userTwo: userTwo },
+      { userOne: userTwo, userTwo: userOne },
+    ],
+  }).then((chat) => {
+    if (chat) {
+      return chat;
+    }
+    return Chat.create({
+      userOne: userOne,
+      userTwo: userTwo,
+    });
+  });
+};
+
 module.exports = ChatList = mongoose.model("chatList", ChatSchema);

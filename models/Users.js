@@ -104,4 +104,15 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
+// add function
+UserSchema.statics.getSocketId = function (_id) {
+  const User = this;
+  return User.findOne({ _id: _id }).then((user) => {
+    if (user) {
+      return user.socketId;
+    }
+    return null;
+  });
+};
+
 module.exports = User = mongoose.model("user", UserSchema);
