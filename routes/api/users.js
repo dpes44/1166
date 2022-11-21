@@ -83,9 +83,10 @@ router.get("/list", async (req, res, next) => {
         username: 1,
         email: 1,
         name: 1,
+        roles: 1,
         createdAt: 1,
       }
-    ).sort({ createdAt: -1 });
+    ).populate("roles").sort({ createdAt: -1 });
 
     return returnResponse(res, users);
   } catch (err) {
