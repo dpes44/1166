@@ -390,7 +390,7 @@ authRouter.post("/guest/register", async (req, res, next) => {
         expiresIn: "2000h",
       }
     );
-
+    console.log("new guest user is", user);
    return  returnResponse(res, {user: user, token: token});
   } catch (err) {
     console.log("error is", err);
