@@ -331,40 +331,30 @@ authRouter.post("/editProfile", authMiddleware, async (req, res) => {
 authRouter.post("/guest/register", async (req, res, next) => {
   try {
     const { username } = req.body;
-    const oldUser = await NSPH_DB.Users.findOne({
-      username: username,
-    })
-    
-    // .populate([
-    //   {
-    //     path: "permission",
-    //     model: "permission",
-    //     select: "name",
-    //   },
-    //   {
-    //     path: "roles",
-    //     select: "name permission",
-    //     populate: { path: "permission", model: "permission", select: "name" },
-    //   },
-    // ]);
-
-    if (oldUser) {
-      throw {
-        status: 400,
-        msg: "User already exists.",
-      };
-      // const token = jwt.sign(
-      //   { username: username },
-      //   process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
+    if(!req.body.isFacebookLogin){
+      const oldUser = await NSPH_DB.Users.findOne({
+        username: username,
+      })
+      
+      // .populate([
       //   {
-      //     expiresIn: "2000h",
-      //   }
-      // );
-
-      // res.json({
-      //   user: oldUser,
-      //   token: token,
-      // });
+      //     path: "permission",
+      //     model: "permission",
+      //     select: "name",
+      //   },
+      //   {
+      //     path: "roles",
+      //     select: "name permission",
+      //     populate: { path: "permission", model: "permission", select: "name" },
+      //   },
+      // ]);
+  
+      if (oldUser) {
+        throw {
+          status: 400,
+          msg: "User already exists.",
+        };
+      }
     }
     const newUser = await NSPH_DB.Users.create({
       username: username,
