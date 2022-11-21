@@ -78,6 +78,11 @@ module.exports = function (server) {
           if (chat) {
             return null;
           }
+          let test = {
+            userOne: data.from || data.sender,
+            userTwo: data.to || data.receiver,
+          }
+          console.log("test is ", test);
           NSPH_DB.ChatList.create({
             userOne: data.from || data.sender,
             userTwo: data.to || data.receiver,
