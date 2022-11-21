@@ -91,7 +91,7 @@ authRouter.post("/register", async (req, res) => {
   bcrypt.hash(password, 7, async (err, hash) => {
     if (err) {
       return res.status(400).json({ msg: "Error saving the password" });
-    } 
+    }
     newUser.password = hash;
     const isUserSaved = await newUser.save();
 
@@ -263,7 +263,7 @@ authRouter.post("/login", async (req, res) => {
 
   if (mathPassword) {
     const token = jwt.sign(
-      { user_id: user._id, email, username:user.username },
+      { user_id: user._id, email, username: user.username },
       process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
       {
         expiresIn: "2000h",
@@ -331,24 +331,12 @@ authRouter.post("/editProfile", authMiddleware, async (req, res) => {
 authRouter.post("/guest/register", async (req, res, next) => {
   try {
     const { username } = req.body;
-    if(!req.body.isFacebookLogin){
-      const oldUser = await NSPH_DB.Users.findOne({
-        username: username,
-      })
-      
-      // .populate([
-      //   {
-      //     path: "permission",
-      //     model: "permission",
-      //     select: "name",
-      //   },
-      //   {
-      //     path: "roles",
-      //     select: "name permission",
-      //     populate: { path: "permission", model: "permission", select: "name" },
-      //   },
-      // ]);
-  
+
+    const oldUser = await NSPH_DB.Users.findOne({
+      username: username,
+    });
+
+    if (!req.body.isFacebookLogin) {
       if (oldUser) {
         throw {
           status: 400,
@@ -356,6 +344,31 @@ authRouter.post("/guest/register", async (req, res, next) => {
         };
       }
     }
+
+    if (oldUser && req.body.isFacebookLogin) {
+      const token = jwt.sign(
+        { username: username },
+        process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
+        {
+          expiresIn: "7d",
+        }
+      );
+      console.log("new guest user is", user);
+      return returnResponse(res, { user: user, token: token });
+    }
+
+    // .populate([
+    //   {
+    //     path: "permission",
+    //     model: "permission",
+    //     select: "name",
+    //   },
+    //   {
+    //     path: "roles",
+    //     select: "name permission",
+    //     populate: { path: "permission", model: "permission", select: "name" },
+    //   },
+    // ]);
     const newUser = await NSPH_DB.Users.create({
       username: username,
       roles: ["63527da890113e06ec9965b3"],
@@ -381,7 +394,7 @@ authRouter.post("/guest/register", async (req, res, next) => {
       }
     );
     console.log("new guest user is", user);
-   return  returnResponse(res, {user: user, token: token});
+    return returnResponse(res, { user: user, token: token });
   } catch (err) {
     console.log("error is", err);
     next(err);
