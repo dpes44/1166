@@ -14,9 +14,7 @@ const verifyToken = async (req, res, next) => {
       config.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2"
     );
 
-    const user = await NSPH_DB.Users.findOne({
-      $or: [{ email: decoded.email }, { username: decoded.username}],
-    });
+    const user = await NSPH_DB.Users.findOne({ username: decoded.username });
     req.user = user;
   } catch (err) {
     return res.status(401).send("Invalid Token");

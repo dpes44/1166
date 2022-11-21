@@ -100,7 +100,7 @@ router.get("/roster/:userId", async (req, res, next) => {
       $or: [{ userOne: req.params.userId }, { userTwo: req.user._id }],
     }).populate("userOne", "username email _id").populate("userTwo", "username email _id").sort({ createdAt: 1 });
 
-    const rosters = datas.map(function(user) {
+    const rosters = datas.map(function (user) {
       return user.userOne._id == req.params.userId ? user.userTwo : user.userOne;
     })
     return returnResponse(res, rosters);
@@ -135,7 +135,7 @@ router.post("/create", async (req, res, next) => {
     // }
     const hashedPassword = hash(req.body.password);
     const oldUser = await NSPH_DB.Users.findOne({
-      $or: [{ email: req.body.email }, { username: req.body.username }],
+      $or: [{ username: req.body.username }],
     });
     if (oldUser) {
       throw { status: 422, msg: "Email already registered" };
