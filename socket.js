@@ -56,6 +56,7 @@ module.exports = function (server) {
     // updated user with new socket id
 
     socket.on("send-msg", async (data) => {
+      console.log("data is ", data);
       NSPH_DB.Messages.create({
         sender: data.from || data.sender,
         receiver: data.to || data.receiver,
@@ -67,7 +68,7 @@ module.exports = function (server) {
         },
         { username: 1, socketId: 1, email:1 }
       );
-
+      console.log("user is ", user);
       NSPH_DB.ChatList.findOne({
         $or: [
           { userOne: data.from || data.sender, userTwo: data.to || data.receiver },
@@ -89,7 +90,9 @@ module.exports = function (server) {
           });
           io.to(user.socketId).emit("new-roster", socket.user);
         })
-        .catch((err) => {});
+        .catch((err) => {
+          console.log("error is ", err);
+        });
 
       io.to(user.socketId).emit("receive-msg", {
         body: data.message || data.body,
