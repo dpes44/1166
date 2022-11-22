@@ -78,6 +78,7 @@ router.get("/list", async (req, res, next) => {
     const users = await NSPH_DB.Users.find(
       {
         email: { $nin: [req.user.email] },
+        roles: { $nin: ["6326d8833be0d13048de6b16"] },
       },
       {
         username: 1,
