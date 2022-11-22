@@ -78,14 +78,16 @@ router.get("/list", async (req, res, next) => {
     const users = await NSPH_DB.Users.find(
       {
         email: { $nin: [req.user.email] },
+        roles: { $nin: ["6326d8833be0d13048de6b16"] },
       },
       {
         username: 1,
         email: 1,
         name: 1,
+        roles: 1,
         createdAt: 1,
       }
-    ).sort({ createdAt: -1 });
+    ).populate("roles").sort({ createdAt: -1 });
 
     return returnResponse(res, users);
   } catch (err) {
