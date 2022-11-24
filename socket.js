@@ -15,7 +15,6 @@ module.exports = function (server) {
 
     io.on("connection", async (socket) => {
         // updated user with new socket id only at new connection
-        console.log("socket connected", socket.user);
         socket.user.socketId = socket.id;
         await socket.user.save();
 
@@ -35,6 +34,21 @@ module.exports = function (server) {
             const chatList = await NSPH_DB.ChatList.findOrCreate(data.from || data.sender, data.to || data.receiver);
 
         });
+
+        socket.on("callUser", async (data) => {
+            console.log("call user event is ", data.to);
+            io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
+              "callUser",
+              { signal: data.signalData, from: data.from, to: data.to }
+            );
+          });
+          socket.on("answerCall", async (data) => {
+            console.log("call accepted message", data.to);
+            io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
+              "callAccepted",
+              data.signal
+            );
+          });
 
         socket.on("disconnect", () => {
             socket.emit("user-disconnected", socket.id);

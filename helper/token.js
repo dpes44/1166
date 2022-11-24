@@ -9,7 +9,6 @@ const getUserFromToken = async (token) => {
                 token,
                 process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2"
             );
-            console.log("decoded is ", decoded);
             // check if expire
             // if (decoded.exp < Date.now()) {
             //     reject("Token Expired");
