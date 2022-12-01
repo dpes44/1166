@@ -29,12 +29,13 @@ app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use("/upload", express.static(__dirname + "/public/uploads"));
 
 // sudo prosodyctl register raj3 chat.leanq.com.np 123456
 //bitbucket paasword: ATBB7eZABC3Tq6L9eDXqscuBALCvBF18AB74
 // var userRouter = express.Router();
 
-// Connect Database 
+// Connect Database
 connectDB();
 
 app.get("*", function (req, res, next) {
@@ -63,6 +64,7 @@ app.use("/api/call-log", authMiddleware, require("./routes/api/call"));
 app.use("/api/permission", require("./routes/api/permission"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/message", authMiddleware, require("./routes/api/message"));
+app.use("/api/blog", authMiddleware, require("./routes/api/blog"));
 //API End
 
 const port = process.env.PORT || 8082;
@@ -79,7 +81,9 @@ app.use("*", (req, res) => {
   });
 });
 
-let server = app.listen(port, () => console.log(`Server running on port ${port}`));
+let server = app.listen(port, () =>
+  console.log(`Server running on port ${port}`)
+);
 require("./socket")(server);
 //error handler middleware
 app.use(function (err, req, res, next) {
@@ -91,5 +95,3 @@ app.use(function (err, req, res, next) {
     error: err,
   });
 });
-
-
