@@ -30,6 +30,7 @@ const BlogSchema = new mongoose.Schema(
       name: String,
       url: String,
     },
+    youtubeVideoId: String,
     isPublished: {
       type: Boolean,
       default: true,
