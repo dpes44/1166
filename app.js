@@ -49,11 +49,11 @@ app.use(cors("*"));
 //API Start
 app.use("/api/user", authMiddleware, require("./routes/api/users"));
 app.use("/api/role", authMiddleware, require("./routes/api/role"));
-app.use(
-  "/api/age-group",
-  authMiddleware,
-  require("./routes/api/data/agegroup")
-);
+// app.use(
+//   "/api/age-group",
+//   authMiddleware,
+//   require("./routes/api/data/agegroup")
+// );
 app.use(
   "/api/call-type",
   authMiddleware,

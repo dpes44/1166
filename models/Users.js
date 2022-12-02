@@ -80,10 +80,13 @@ const UserSchema = new mongoose.Schema(
     province: {
       type: String,
     },
-    ageGroup: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "agegroup",
+    age: {
+      type: Number,
     },
+    // ageGroup: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "agegroup",
+    // },
     roles: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -371,7 +371,7 @@ authRouter.post("/guest/register", async (req, res, next) => {
     // ]);
     const newUser = await NSPH_DB.Users.create({
       username: username,
-      roles: ["63527da890113e06ec9965b3"],
+      roles: ["63527da890113e06ec9965b3"], //guest user role id
     });
 
     const user = await NSPH_DB.Users.findById(newUser._id).populate([

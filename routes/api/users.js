@@ -75,19 +75,53 @@ router.get("/", (req, res) => {
 // get all users in the database
 router.get("/list", async (req, res, next) => {
   try {
-    const users = await NSPH_DB.Users.find(
+    // const users = await NSPH_DB.Users.find(
+    //   {
+    //     email: { $nin: [req.user.email] },
+    //     // roles: { $nin: ["6326d8833be0d13048de6b16"] },
+    //   },
+    //   {
+    //     username: 1,
+    //     email: 1,
+    //     name: 1,
+    //     roles: 1,
+    //     createdAt: 1,
+    //   }
+    // )
+    //   .populate("roles")
+    //   .sort({ createdAt: -1 });
+
+    const users = await NSPH_DB.Users.aggregate([
       {
-        email: { $nin: [req.user.email] },
-        // roles: { $nin: ["6326d8833be0d13048de6b16"] },
+        $lookup: {
+          from: "roles",
+          localField: "roles",
+          foreignField: "_id",
+          as: "roles",
+        },
       },
+      // {$sort: {createdAt: -1}},
+      { $unwind: { path: "$roles" } },
+      { $match: { "roles.name": { $in: ["Facilitator", "Guest"] } } },
       {
-        username: 1,
-        email: 1,
-        name: 1,
-        roles: 1,
-        createdAt: 1,
-      }
-    ).populate("roles").sort({ createdAt: -1 });
+        $group: {
+          _id: { name: "$roles.name", _id: "$roles._id" },
+          count: { $sum: 1 },
+          users: { $push: "$$ROOT" },
+        },
+      },
+      { $sort: { "_id._id": 1 } },
+      {
+        $project: {
+          _id: 0,
+          name: "$_id.name",
+          _id: "$_id._id",
+          count: 1,
+          users: 1,
+          // TO DO sort users by createdAt
+        },
+      },
+    ]);
 
     return returnResponse(res, users);
   } catch (err) {
@@ -100,11 +134,16 @@ router.get("/roster/:userId", async (req, res, next) => {
   try {
     const datas = await NSPH_DB.ChatList.find({
       $or: [{ userOne: req.params.userId }, { userTwo: req.user._id }],
-    }).populate("userOne", "username email _id").populate("userTwo", "username email _id").sort({ createdAt: 1 });
+    })
+      .populate("userOne", "username email _id")
+      .populate("userTwo", "username email _id")
+      .sort({ createdAt: 1 });
 
     const rosters = datas.map(function (user) {
-      return user.userOne._id == req.params.userId ? user.userTwo : user.userOne;
-    })
+      return user.userOne._id == req.params.userId
+        ? user.userTwo
+        : user.userOne;
+    });
     return returnResponse(res, rosters);
   } catch (err) {
     next(err);

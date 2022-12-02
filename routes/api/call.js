@@ -39,7 +39,7 @@ router.post("/add", async function (req, res, next) {
     customer.email = req.body.email;
     customer.gender = req.body.gender;
     customer.province = req.body.province;
-    customer.ageGroup = req.body.ageGroup;
+    // customer.ageGroup = req.body.ageGroup;
     customer.address = req.body.address;
     customer.phone = req.body.phone
     await customer.save();
