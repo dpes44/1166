@@ -27,7 +27,7 @@ module.exports = function (server) {
       });
       console.log("message is ", message);
       console.log(
-        "socket id is ",
+        "socket id is ", 
         await NSPH_DB.Users.getSocketId(data.to || data.receiver)
       );
       // emit message to  user
@@ -36,9 +36,10 @@ module.exports = function (server) {
         message
       );
       // find or create chat list
-      const chatList = await NSPH_DB.ChatList.findOrCreate(
+      const chatList = await NSPH_DB.ChatList.createOrUpdate(
         data.from || data.sender,
-        data.to || data.receiver
+        data.to || data.receiver,
+        message._id
       );
     });
 
@@ -77,7 +78,7 @@ module.exports = function (server) {
       // console.log("Decline Call", data);
       // // let caller = data.caller;
       // rtcMessage = data.rtcMessage;
-      console.log("call is declined", data);
+      console.log("call is declined", await NSPH_DB.Users.findById(data.to || data.receiver));
 
       socket
         .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))

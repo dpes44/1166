@@ -2,6 +2,7 @@ const { returnResponse } = require("../../helper/response.helper");
 const upload = require("../../middleware/uploader");
 const fs = require("fs");
 const path = require("path");
+const { validateMongooseId } = require("../../helper/array.helper");
 const router = require("express").Router();
 
 router.get("/list", async function (req, res, next) {
@@ -68,6 +69,19 @@ router
     }
   });
 
+router.get("/get-blogs-by-ids", async function (req, res, next) {
+  try {
+    let ids = req.query.ids.split(",");
+    const blogs = await NSPH_DB.Blog.find({
+      _id: { $in: validateMongooseId(ids) },
+    });
+    return returnResponse(res, blogs);
+  } catch (err) {
+    console.log("error is", err);
+    next(err);
+  }
+});
+
 router.get("/:id", async function (req, res, next) {
   try {
     const blog = await NSPH_DB.Blog.findById(req.params.id);
@@ -79,4 +93,5 @@ router.get("/:id", async function (req, res, next) {
     next(err);
   }
 });
+
 module.exports = router;

@@ -14,56 +14,58 @@ const ChatSchema = new mongoose.Schema(
       ref: "user",
       required: [true, "receiver is required"],
     },
-
+    message: {
+      type: mongoose.Types.ObjectId,
+      ref: "message",
+    },
   },
   {
     timestamps: true,
     toJSON: {
       getters: true,
       setters: true,
-    }
-  },
+    },
+  }
 );
 
-// add function 
-ChatSchema.statics.findOrCreate = function (userOne, userTwo) {
+// add function
+ChatSchema.statics.createOrUpdate = function (userOne, userTwo, message) {
   const Chat = this;
   return Chat.findOne({
     $or: [
       { userOne: userOne, userTwo: userTwo },
       { userOne: userTwo, userTwo: userOne },
     ],
-  }).then((chat) => {
+  }).then(async (chat) => {
     if (chat) {
+      message ? (chat.message = message && (await chat.save())) : null;
       return chat;
     }
     return Chat.create({
       userOne: userOne,
       userTwo: userTwo,
+      message,
     });
   });
 };
-
 
 ChatSchema.statics.getChatList = function (_id) {
   const Chat = this;
   return Chat.find({
-    $or: [
-      { userOne: _id },
-      { userTwo: _id },
-    ],
-  }).populate(["userOne", "userTwo"]).sort({ createdAt: "desc" }).then((chats) => {
-    return chats.map((chat) => {
-      if (chat.userOne._id.toString() === _id.toString()) {
-        return chat.userTwo;
-      }
-      return chat.userOne;
+    $or: [{ userOne: _id }, { userTwo: _id }],
+  })
+    .populate(["userOne", "userTwo"])
+    .sort({ createdAt: "desc" })
+    .then((chats) => {
+      return chats.map((chat) => {
+        if (chat.userOne._id.toString() === _id.toString()) {
+          return chat.userTwo;
+        }
+        return chat.userOne;
+      });
     });
-  });
 };
 
 // ChatSchema.set('toJson', { virtual: true })
-
-
 
 module.exports = ChatList = mongoose.model("chatList", ChatSchema);
