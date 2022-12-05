@@ -42,26 +42,65 @@ module.exports = function (server) {
       );
     });
 
-    socket.on("call-user", async (data) => {
-      console.log("call user event is ", data.to);
-      io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
-        "call-receive",
-        { signal: data.signalData, from: data.from, to: data.to }
-      );
-    });
-    socket.on("call-answer", async (data) => {
-      console.log("call accepted message", data.to);
-      io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
-        "call-accepted",
-        data.signal
-      );
+    socket.on("call", async (data) => {
+      console.log("call", data);
+      // let callee = data.name;
+      let rtcMessage = data.rtcMessage;
+
+      socket
+        .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
+        .emit("newCall", {
+          from: data.from,
+          to: data.to,
+          caller: socket.user,
+          rtcMessage: rtcMessage,
+        });
     });
 
-    socket.on("call-decline", async (data) => {
-      io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
-        "call-declined",
-        data
-      );
+    socket.on("answerCall", async (data) => {
+      console.log("Answer Call", data);
+      // let caller = data.caller;
+      rtcMessage = data.rtcMessage;
+
+      console.log("answer call is", data);
+      socket
+        .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
+        .emit("callAnswered", {
+          callee: socket.user,
+          from: data.to,
+          to: data.from,
+          rtcMessage: rtcMessage,
+        });
+    });
+
+    socket.on("declineCall", async (data) => {
+      // console.log("Decline Call", data);
+      // // let caller = data.caller;
+      // rtcMessage = data.rtcMessage;
+      console.log("call is declined", data);
+
+      socket
+        .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
+        .emit("callDeclined", {
+          // callee: socket.user,
+          from: data.to,
+          to: data.from,
+          // rtcMessage: rtcMessage,
+        });
+    });
+
+    socket.on("ICEcandidate", async (data) => {
+      let otherUser = data.user;
+      let rtcMessage = data.rtcMessage;
+
+      socket
+        .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
+        .emit("ICEcandidate", {
+          sender: socket.user,
+          from: data.from,
+          to: data.to,
+          rtcMessage: rtcMessage,
+        });
     });
 
     socket.on("disconnect", () => {
