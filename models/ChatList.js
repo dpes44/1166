@@ -60,7 +60,7 @@ ChatSchema.statics.getChatList = function (_id) {
       return chats.map((chat) => {
         if (chat.userOne._id.toString() === _id.toString()) {
           return {
-            _id: chat._id,
+            _id: chat.userTwo._id,
             username: chat.userTwo.username,
             firstname: chat.userTwo.firstname,
             lastname: chat.userTwo.lastname,
@@ -69,7 +69,7 @@ ChatSchema.statics.getChatList = function (_id) {
           }
         } else {
           return {
-            _id: chat._id,
+            _id: chat.userTwo._id,
             username: chat.userOne.username,
             firstname: chat.userOne.firstname,
             lastname: chat.userOne.lastname,

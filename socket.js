@@ -113,8 +113,6 @@ module.exports = function (server) {
     });
 
     // socket disconnect
-
-
     socket.on("disconnect", () => {
       socket.emit("user-disconnected", socket.id);
     });
