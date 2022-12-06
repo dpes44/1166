@@ -135,14 +135,28 @@ router.get("/roster/:userId", async (req, res, next) => {
     const datas = await NSPH_DB.ChatList.find({
       $or: [{ userOne: req.params.userId }, { userTwo: req.user._id }],
     })
-      .populate("userOne", "username email _id")
-      .populate("userTwo", "username email _id")
+      .populate("userOne", "username email _id onlineStatus")
+      .populate("userTwo", "username email _id onlineStatus")
+      .populate("message")
       .sort({ createdAt: 1 });
 
+    console.log("datas", datas);
     const rosters = datas.map(function (user) {
       return user.userOne._id == req.params.userId
-        ? user.userTwo
-        : user.userOne;
+        ? {
+            username: user?.userTwo?.username,
+            email: user?.userTwo?.email,
+            _id: user?.userTwo?._id,
+            lastMessage: user?.message,
+            onlineStatus: user?.userTwo?.onlineStatus,
+          }
+        : {
+            username: user?.userOne?.username,
+            email: user?.userOne?.email,
+            _id: user?.userOne?._id,
+            onlineStatus: user?.userOne?.onlineStatus,
+            lastMessage: user?.message,
+          };
     });
     return returnResponse(res, rosters);
   } catch (err) {

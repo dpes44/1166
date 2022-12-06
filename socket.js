@@ -14,7 +14,7 @@ module.exports = function (server) {
 
   io.on("connection", async (socket) => {
     // updated user with new socket id only at new connection
-    console.log("connected")
+    console.log("connected");
     socket.user.socketId = socket.id;
     await socket.user.save();
 
@@ -37,7 +37,7 @@ module.exports = function (server) {
         message
       );
       // find or create chat list
-      const chatList = await NSPH_DB.ChatList.createOrUpdate(
+      await NSPH_DB.ChatList.createOrUpdate(
         data.from || data.sender,
         data.to || data.receiver,
         message._id
@@ -79,7 +79,10 @@ module.exports = function (server) {
       // console.log("Decline Call", data);
       // // let caller = data.caller;
       // rtcMessage = data.rtcMessage;
-      console.log("call is declined", await NSPH_DB.Users.findById(data.to || data.receiver));
+      console.log(
+        "call is declined",
+        await NSPH_DB.Users.findById(data.to || data.receiver)
+      );
 
       socket
         .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
@@ -92,7 +95,6 @@ module.exports = function (server) {
     });
 
     socket.on("ICEcandidate", async (data) => {
-      let otherUser = data.user;
       let rtcMessage = data.rtcMessage;
 
       socket
@@ -105,16 +107,16 @@ module.exports = function (server) {
         });
     });
 
-
-
     socket.on("messageSeen", async (data) => {
       console.log("message seen", data);
       await NSPH_DB.Messages.updateOne({ _id: data.id }, { seen: Date.now() });
     });
 
     // socket disconnect
-    socket.on("disconnect", () => {
-      socket.emit("user-disconnected", socket.id);
+    socket.on("disconnect", async () => {
+      // socket.emit("user-disconnected", socket.id);
+      socket && socket.user ? (socket.user.onlineStatus = "Offline") : null;
+      socket && socket.user ? await socket.user.save() : null;
     });
   });
 };
