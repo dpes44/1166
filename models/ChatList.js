@@ -70,7 +70,7 @@ ChatSchema.statics.getChatList = function (_id) {
           }
         } else {
           return {
-            _id: chat.userTwo._id,
+            _id: chat.userOne._id,
             username: chat.userOne.username,
             firstname: chat.userOne.firstname,
             lastname: chat.userOne.lastname,
