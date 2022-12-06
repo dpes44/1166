@@ -83,6 +83,11 @@ const UserSchema = new mongoose.Schema(
     age: {
       type: Number,
     },
+    onlineStatus: {
+      type: String,
+      enum: ["Online", "Offline"],
+      default: "Offline",
+    },
     // ageGroup: {
     //   type: mongoose.Schema.Types.ObjectId,
     //   ref: "agegroup",

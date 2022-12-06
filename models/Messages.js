@@ -19,9 +19,15 @@ const MessageSchema = new mongoose.Schema(
       enum: ["text", "image", "video", "audio", "url"],
       default: "text",
     },
-    body:{
-        type: String,
-    }
+    body: {
+      type: String,
+    },
+    // seenAt time stamp 
+    seen: {
+      type: Date,
+      required: false,
+      default: null
+    },
   },
   {
     timestamps: true,

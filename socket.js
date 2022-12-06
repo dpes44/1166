@@ -14,6 +14,7 @@ module.exports = function (server) {
 
   io.on("connection", async (socket) => {
     // updated user with new socket id only at new connection
+    console.log("connected")
     socket.user.socketId = socket.id;
     await socket.user.save();
 
@@ -27,7 +28,7 @@ module.exports = function (server) {
       });
       console.log("message is ", message);
       console.log(
-        "socket id is ", 
+        "socket id is ",
         await NSPH_DB.Users.getSocketId(data.to || data.receiver)
       );
       // emit message to  user
@@ -103,6 +104,16 @@ module.exports = function (server) {
           rtcMessage: rtcMessage,
         });
     });
+
+
+
+    socket.on("messageSeen", async (data) => {
+      console.log("message seen", data);
+      await NSPH_DB.Messages.updateOne({ _id: data.id }, { seen: Date.now() });
+    });
+
+    // socket disconnect
+
 
     socket.on("disconnect", () => {
       socket.emit("user-disconnected", socket.id);

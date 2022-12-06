@@ -54,14 +54,29 @@ ChatSchema.statics.getChatList = function (_id) {
   return Chat.find({
     $or: [{ userOne: _id }, { userTwo: _id }],
   })
-    .populate(["userOne", "userTwo"])
+    .populate(["userOne", "userTwo","message"])
     .sort({ createdAt: "desc" })
     .then((chats) => {
       return chats.map((chat) => {
         if (chat.userOne._id.toString() === _id.toString()) {
-          return chat.userTwo;
+          return {
+            _id: chat._id,
+            username: chat.userTwo.username,
+            firstname: chat.userTwo.firstname,
+            lastname: chat.userTwo.lastname,
+            middlename: chat.userTwo.middlename,
+            lastMessage: chat.message,
+          }
+        } else {
+          return {
+            _id: chat._id,
+            username: chat.userOne.username,
+            firstname: chat.userOne.firstname,
+            lastname: chat.userOne.lastname,
+            middlename: chat.userOne.middlename,
+            lastMessage: chat.message,
+          }
         }
-        return chat.userOne;
       });
     });
 };
