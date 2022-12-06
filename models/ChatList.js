@@ -66,6 +66,7 @@ ChatSchema.statics.getChatList = function (_id) {
             firstname: chat.userTwo.firstname,
             lastname: chat.userTwo.lastname,
             middlename: chat.userTwo.middlename,
+            onlineStatus: chat.userTwo.onlineStatus,
             lastMessage: chat.message,
           }
         } else {
@@ -75,6 +76,7 @@ ChatSchema.statics.getChatList = function (_id) {
             firstname: chat.userOne.firstname,
             lastname: chat.userOne.lastname,
             middlename: chat.userOne.middlename,
+            onlineStatus: chat.userOne.onlineStatus,
             lastMessage: chat.message,
           }
         }
