@@ -38,7 +38,8 @@ ChatSchema.statics.createOrUpdate = function (userOne, userTwo, message) {
     ],
   }).then(async (chat) => {
     if (chat) {
-      message ? (chat.message = message && (await chat.save())) : null;
+      chat.message = message;
+      return await chat.save();
       return chat;
     }
     return Chat.create({
@@ -54,7 +55,7 @@ ChatSchema.statics.getChatList = function (_id) {
   return Chat.find({
     $or: [{ userOne: _id }, { userTwo: _id }],
   })
-    .populate(["userOne", "userTwo","message"])
+    .populate(["userOne", "userTwo", "message"])
     .sort({ createdAt: "desc" })
     .then((chats) => {
       return chats.map((chat) => {
