@@ -110,7 +110,7 @@ module.exports = function (server) {
 
     socket.on("messageSeen", async (data) => {
       console.log("message seen", data);
-      await NSPH_DB.Messages.updateOne({ _id: data.id }, { seen: Date.now() });
+      await NSPH_DB.Messages.updateOne({ _id: data.id || data._id }, { seen: Date.now() });
     });
 
     // socket disconnect
