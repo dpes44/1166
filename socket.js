@@ -26,6 +26,7 @@ module.exports = function (server) {
         receiver: data.to || data.receiver,
         body: data.message || data.body,
       });
+      
       console.log("message is ", message);
       console.log(
         "socket id is ",
@@ -105,7 +106,7 @@ module.exports = function (server) {
           to: data.to,
           rtcMessage: rtcMessage,
         });
-    });
+    }); 
 
     socket.on("messageSeen", async (data) => {
       console.log("message seen", data);

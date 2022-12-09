@@ -106,6 +106,10 @@ const UserSchema = new mongoose.Schema(
         required: false,
       },
     ],
+    notification: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
