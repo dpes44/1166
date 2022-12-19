@@ -1,10 +1,11 @@
 // routes/api/books.js
 const express = require("express");
+const { returnResponse } = require("../../helper/response.helper");
 const router = express.Router();
 
 router.post("/add", async function (req, res, next) {
   try {
-    console.log("req.body is ", req.body)
+    console.log("req.body is ", req.body);
     const facilitator = await NSPH_DB.Users.findById(req.body.facilitator);
     if (!facilitator) {
       throw {
@@ -36,12 +37,11 @@ router.post("/add", async function (req, res, next) {
     customer.firstname = req.body.firstname;
     customer.middlename = req.body.middlename;
     customer.lastname = req.body.lastname;
-    customer.email = req.body.email;
+    // customer.email = req.body.email;
     customer.gender = req.body.gender;
-    customer.province = req.body.province;
     // customer.ageGroup = req.body.ageGroup;
     customer.address = req.body.address;
-    customer.phone = req.body.phone
+    customer.phone = req.body.phone;
     await customer.save();
     const callLog = await NSPH_DB.CallLog.create({
       facilitator: facilitator._id,
@@ -52,12 +52,26 @@ router.post("/add", async function (req, res, next) {
       callTo: req.body.callTo,
       duration: req.body.duration,
       comment: req.body.comment,
-      callType: [req.body.callType],
+      callType: req.body.callType,
+      occupation: req.body.occupation,
+      maritalStatus: req.body.maritalStatus,
+      vulnerability: req.body.vulnerability,
+      callType: req.body.callType,
+      sucide: req.body.sucide,
+      phoneOfSignificantOther: req.body.phoneOfSignificantOther,
+      relation: req.body.relation,
+      service: req.body.service,
+      referralTo: req.body.referralTo,
+      referralFrom: req.body.referralFrom,
+      caller: req.body.caller,
+      supportThrough: req.body.supportThrough,
+      note: req.body.note,
+      totalTime: req.body.totalTime,
     });
 
     res.json(callLog);
   } catch (err) {
-    console.log("error is", err)
+    console.log("error is", err);
     next(err);
   }
 });
@@ -102,7 +116,8 @@ router.get("/data", async function (req, res, next) {
     const ageGroups = await NSPH_DB.AgeGroup.find();
     const callTypes = await NSPH_DB.CallType.find();
     const shifts = await NSPH_DB.Shift.find();
-    res.json({
+
+    return returnResponse(res, {
       ageGroups: ageGroups,
       callTypes: callTypes,
       shifts: shifts,

@@ -123,6 +123,7 @@ router.get("/list", async (req, res, next) => {
       },
     ]);
 
+
     return returnResponse(res, users);
   } catch (err) {
     console.log("error is", err);
@@ -213,30 +214,7 @@ router.post("/create", async (req, res, next) => {
       password: hashedPassword,
     });
 
-    var comm =
-      "sudo /usr/bin/prosodyctl register " +
-      req.body.username +
-      "@chat2.leanq.com.np 1166";
-
-    sudo.setPassword("1166");
-
-    var command = [
-      "sudo",
-      "/usr/bin/prosodyctl",
-      "register",
-      `${req.body.username}@chat2.leanq.com.np`,
-      "1166",
-    ];
-
-    sudo.exec(command, (error, pid, result) => {
-      if (error) {
-        console.log("error:", error.message);
-      }
-      if (pid) {
-        console.log("pid:", pid);
-      }
-      console.log("stdout:", result);
-    });
+    
     res.status(200).json(user);
     // res.status(200).json([]);
   } catch (err) {

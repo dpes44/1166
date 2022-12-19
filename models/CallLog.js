@@ -8,18 +8,54 @@ const CallLogSchema = new mongoose.Schema(
     user: { type: mongoose.Types.ObjectId, ref: "user", required: false },
     duration: {
       type: String,
-      required:[true, "Duration is required"]
+      required: [true, "Duration is required"],
+    },
+    totalTime: {
+      type: Number,
+      required: [true, "Total time is required"],
     },
     date: {
       type: Date,
     },
+    address: {
+      type: String,
+    },
+    occupation: {
+      type: String,
+    },
+    maritalStatus: {
+      type: String,
+    },
+    vulnerability: {
+      type: String,
+    },
+    callType: {
+      type: String,
+    },
+    sucide: {
+      type: String,
+    },
+    phoneOfSignificantOther: {
+      type: String,
+    },
+    relation: {
+      type: String,
+    },
+    service: { type: String },
+    referralTo: { type: String },
+    referralFrom: { type: String },
+    caller: { type: String },
+    supportThrough: { type: String },
     callFrom: { type: mongoose.Types.ObjectId, ref: "user", required: false },
     callTo: { type: mongoose.Types.ObjectId, ref: "user", required: false },
     shift: { type: mongoose.Types.ObjectId, ref: "shift", required: false },
-    comment: {
+    note: {
       type: String,
     },
-    callType: [{ type: mongoose.Types.ObjectId, ref: "calltype" }],
+    callType: {
+      type: String,
+    },
+    // callType: [{ type: mongoose.Types.ObjectId, ref: "calltype" }],
   },
   {
     timestamps: true,
