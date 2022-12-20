@@ -62,4 +62,36 @@ const CallLogSchema = new mongoose.Schema(
   }
 );
 
+CallLogSchema.statics.paginate = async function (query) {
+  try {
+    
+    const {
+      query = {},
+      limit = 5,
+      page = 1,
+      sort = {},
+      populate,
+      fields,
+    } = query;
+  
+    let output = {
+      total: 0,
+      page: page < 1 ? 1 : parseInt(page),
+      limit: limit < 1 ? 1 : parseInt(limit),
+      data: [],
+    }
+
+    const skip = (output.page - 1) * output.limit;
+
+    const total = await this.countDocuments(query);
+    const data = await this.find(query, fields)
+  
+    output.total = total;
+  } catch (error) {
+    console.log("error is", error)
+    return []
+  }
+
+};
+
 module.exports = CallLog = mongoose.model("calllog", CallLogSchema);
