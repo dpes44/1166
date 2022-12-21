@@ -240,7 +240,7 @@ authRouter.post("/login", async (req, res) => {
     return res.status(400).json({ msg: "Please enter your password" });
   }
 
-  const user = await User.findOne({ email }).populate([
+  const user = await User.findOne({ email }).select("+password").populate([
     {
       path: "permission",
       model: "permission",
@@ -258,6 +258,7 @@ authRouter.post("/login", async (req, res) => {
     return res.status(400).json({ msg: "User not found" });
   }
 
+  console.log("password, user", password, user.password)
   //compare password
   const mathPassword = await bcrypt.compare(password, user.password);
 
