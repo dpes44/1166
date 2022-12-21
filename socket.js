@@ -26,16 +26,20 @@ module.exports = function (server) {
         receiver: data.to || data.receiver,
         body: data.message || data.body,
       });
-      
+
       console.log("message is ", message);
       console.log(
         "socket id is ",
         await NSPH_DB.Users.getSocketId(data.to || data.receiver)
       );
       // emit message to  user
+      let newMsg = message.toObject();
+      newMsg["senderDetail"] = await NSPH_DB.Users.findById(
+        data.from || data.sender
+      ,"username status");
       io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
         "receive-msg",
-        message
+        newMsg
       );
       // find or create chat list
       await NSPH_DB.ChatList.createOrUpdate(
@@ -76,6 +80,20 @@ module.exports = function (server) {
         });
     });
 
+    socket.on("busy", async (data) => {
+      // console.log("busy", data);
+      // let caller = data.caller;
+      // rtcMessage = data.rtcMessage;
+
+      socket
+        .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
+        .emit("busy", {
+          from: data.to,
+          to: data.from,
+          // rtcMessage: rtcMessage,
+        });
+    });
+
     socket.on("declineCall", async (data) => {
       // console.log("Decline Call", data);
       // // let caller = data.caller;
@@ -106,11 +124,14 @@ module.exports = function (server) {
           to: data.to,
           rtcMessage: rtcMessage,
         });
-    }); 
+    });
 
     socket.on("messageSeen", async (data) => {
       console.log("message seen", data);
-      await NSPH_DB.Messages.updateOne({ _id: data.id || data._id }, { seen: Date.now() });
+      await NSPH_DB.Messages.updateOne(
+        { _id: data.id || data._id },
+        { seen: Date.now() }
+      );
     });
 
     // socket disconnect

@@ -151,7 +151,41 @@ router.get("/list", async function (req, res, next) {
     let skip = page <= 1 ? 5 :(page - 1) * 5;
     // if (query.date) {
     //   filters.date = query.date;
-    // }
+        // }
+
+    // const check = await NSPH_DB.CallLog.getCallLogGropedByFacilitator("6364dada7887be4148c439e8");
+    // console.log("check is", check);
+
+    // // const letcheck = await NSPH_DB.CallLog.aggregate([
+    // //   {
+    // //     $match: {
+    // //       user: "6364dada7887be4148c439e8",
+    // //     },
+    // //   },
+    // //   {
+    // //     $lookup: {
+    // //       from: "facilitator",
+    // //       localField: "facilitator",
+    // //       foreignField: "_id",
+    // //       as: "facilitator",
+    // //     },
+    // //   },
+    // //   {
+    // //     $group: {
+    // //       _id: "$facilitator._id",
+    // //       count: { $sum: 1 },
+    // //       calls: {$push: "$$ROOT"}
+    // //     }
+    // //   },{
+    // //     $project: {
+    // //       _id: 0,
+    // //       facilitator: "$_id",
+    // //       calls: 1,
+    // //       count: 1,
+    // //     }
+    // //   }
+    // // ])
+
     const count = await NSPH_DB.CallLog.countDocuments(filters);
     const data = await NSPH_DB.CallLog.find(filters).limit(5).skip(skip).populate([
       {
