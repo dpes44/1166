@@ -59,13 +59,13 @@ app.use(
   authMiddleware,
   require("./routes/api/data/calltype")
 );
-app.use("/api/call-log", require("./routes/api/call"));
+app.use("/api/call-log", authMiddleware, require("./routes/api/call"));
 app.use("/api/shift", authMiddleware, require("./routes/api/data/shift"));
 app.use("/api/permission", require("./routes/api/permission"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/message", authMiddleware, require("./routes/api/message"));
-app.use("/api/blog", require("./routes/api/blog"));
-app.use("/api/dashboard", require("./routes/api/dashboard"));
+app.use("/api/blog",authMiddleware, require("./routes/api/blog"));
+app.use("/api/dashboard",authMiddleware, require("./routes/api/dashboard"));
 //API End
 
 const port = process.env.PORT || 8082;

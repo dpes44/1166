@@ -325,7 +325,7 @@ authRouter.post("/editProfile", authMiddleware, async (req, res) => {
     });
   } else {
     user.name = name;
-    const isUserSaved = await user.save();
+    await user.save();
   }
 });
 
@@ -354,7 +354,6 @@ authRouter.post("/guest/register", async (req, res, next) => {
           expiresIn: "7d",
         }
       );
-      console.log("new guest user is", user);
       return returnResponse(res, { user: user, token: token });
     }
 

@@ -91,7 +91,7 @@ router.get("/list", async (req, res, next) => {
     //   .populate("roles")
     //   .sort({ createdAt: -1 });
 
-    const users = await NSPH_DB.Users.aggregate([
+    const users = await NSPH_DB.Users.aggregate([ 
       {
         $lookup: {
           from: "roles",

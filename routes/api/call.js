@@ -5,7 +5,6 @@ const router = express.Router();
 
 router.post("/add", async function (req, res, next) {
   try {
-    console.log("req.body is ", req.body);
     const facilitator = await NSPH_DB.Users.findById(req.body.facilitator);
     if (!facilitator) {
       throw {
@@ -83,6 +82,7 @@ router.get("/user", async function (req, res, next) {
     });
 
     // const callType = await NSPH_DB.CallLog.findOne({
+
     //   user: user._id,
     // }).populate([
     //   {
@@ -128,7 +128,7 @@ router.get("/data", async function (req, res, next) {
 });
 
 router.get("/list", async function (req, res, next) {
-  try{
+  try {
     let page = 1;
     let filters = {};
     let query = req.query;
@@ -145,13 +145,13 @@ router.get("/list", async function (req, res, next) {
       filters.shift = query.shift;
     }
 
-    if(query.page) {
+    if (query.page) {
       page = parseInt(query.page);
     }
-    let skip = page <= 1 ? 5 :(page - 1) * 5;
+    let skip = page <= 1 ? 5 : (page - 1) * 5;
     // if (query.date) {
     //   filters.date = query.date;
-        // }
+    // }
 
     // const check = await NSPH_DB.CallLog.getCallLogGropedByFacilitator("6364dada7887be4148c439e8");
     // console.log("check is", check);
@@ -187,38 +187,53 @@ router.get("/list", async function (req, res, next) {
     // // ])
 
     const count = await NSPH_DB.CallLog.countDocuments(filters);
-    const data = await NSPH_DB.CallLog.find(filters).limit(5).skip(skip).populate([
-      {
-        path: "facilitator",
-        select: "username",
-      },
-      {
-        path: "callFrom",
-        select: "username",
-      },
-      {
-        path: "callTo",
-        select: "username",
-      },
-      {
-        path: "shift",
-        select: "title",
-      },
-      {
-        path: "user",
-        select: "username gender",
-      },
-    ]);
-
+    const data = await NSPH_DB.CallLog.find(filters)
+      .limit(5)
+      .skip(skip)
+      .populate([
+        {
+          path: "facilitator",
+          select: "username",
+        },
+        {
+          path: "callFrom",
+          select: "username",
+        },
+        {
+          path: "callTo",
+          select: "username",
+        },
+        {
+          path: "shift",
+          select: "title",
+        },
+        {
+          path: "user",
+          select: "username gender",
+        },
+      ]);
 
     return returnResponse(res, {
       data: data,
       count: count,
       page: page,
     });
-  }catch(err){
+  } catch (err) {
     console.log("error is", err);
-    next(err)
+    next(err);
   }
-})
+});
+
+router.get("/facilitator", async function (req, res, next) {
+  try {
+    const check = await NSPH_DB.CallLog.getCallLogGropedByFacilitator(
+      req.user._id
+    );
+
+    return returnResponse(res, check);
+  } catch (err) {
+    console.log("error is", err);
+    next(err);
+  }
+});
 module.exports = router;

@@ -66,16 +66,28 @@ CallLogSchema.statics.getCallLogGropedByFacilitator = async function (userId) {
   return await this.aggregate([
     {
       $match: {
-        user: userId,
+        user: mongoose.Types.ObjectId(userId),
       },
     },
-    // {
-    //   $group: {
-    //     _id: "$facilitator",
-    //     count: { $sum: 1 },
-    //   },
-    // },
-  ])
+    {
+      $lookup: {
+        from: "users",
+        localField: "facilitator",
+        foreignField: "_id",
+        as: "facilitator",
+      },
+    },
+    {
+      $unwind: "$facilitator",
+    },
+    {
+      $group: {
+        _id: "$facilitator.username",
+        facilitator: { $first: "$facilitator" },
+        count: { $sum: 1 },
+      },
+    },
+  ]);
 };
 
 module.exports = CallLog = mongoose.model("calllog", CallLogSchema);
