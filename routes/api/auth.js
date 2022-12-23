@@ -348,9 +348,8 @@ async function createDeviceToken(user, tokenId) {
 
       if (deviceToken) {
         //if device token exist in db
-        await NSPH_DB.Service.findByIdAndUpdate(user._id, {
-          token: tokenId,
-        });
+        deviceToken.token = tokenId;
+        await deviceToken.save();
       }
     }
   } catch (err) {
@@ -386,7 +385,7 @@ authRouter.post("/guest/register", async (req, res, next) => {
         }
       );
       await createDeviceToken(oldUser, req.body.deviceToken);
-      return returnResponse(res, { user: user, token: token });
+      return returnResponse(res, { user: oldUser, token: token });
     }
 
     const newUser = await NSPH_DB.Users.create({

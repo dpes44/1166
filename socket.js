@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const socket = require("socket.io");
+const sendNotification = require("./helper/notification.helper");
 const { getUserFromToken } = require("./helper/token");
 const { checkTokenMiddleware } = require("./middleware/socket");
 module.exports = function (server) {
@@ -32,11 +33,13 @@ module.exports = function (server) {
         "socket id is ",
         await NSPH_DB.Users.getSocketId(data.to || data.receiver)
       );
+      sendNotification(data.to || data.receiver);
       // emit message to  user
       let newMsg = message.toObject();
       newMsg["senderDetail"] = await NSPH_DB.Users.findById(
-        data.from || data.sender
-      ,"username status");
+        data.from || data.sender,
+        "username status"
+      );
       io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
         "receive-msg",
         newMsg
