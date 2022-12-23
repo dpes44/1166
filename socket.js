@@ -56,15 +56,21 @@ module.exports = function (server) {
       console.log("call", data);
       // let callee = data.name;
       let rtcMessage = data.rtcMessage;
+      let callDetail = {
+        from: data.from,
+        to: data.to,
+        caller: socket.user,
+        rtcMessage: rtcMessage,
+      };
+
+      callDetail["senderDetail"] = await NSPH_DB.Users.findById(
+        data.from || data.sender,
+        "username status firstname lastname email"
+      );
 
       socket
         .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
-        .emit("newCall", {
-          from: data.from,
-          to: data.to,
-          caller: socket.user,
-          rtcMessage: rtcMessage,
-        });
+        .emit("newCall", callDetail);
     });
 
     socket.on("answerCall", async (data) => {
