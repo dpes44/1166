@@ -38,7 +38,7 @@ module.exports = function (server) {
       let newMsg = message.toObject();
       newMsg["senderDetail"] = await NSPH_DB.Users.findById(
         data.from || data.sender,
-        "username status"
+        "username status firstname lastname email"
       );
       io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
         "receive-msg",
