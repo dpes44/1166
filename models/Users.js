@@ -55,6 +55,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    isFacebook: {
+      type: Boolean,
+      default: false,
+    },
     otp: {
       type: String,
       required: false,

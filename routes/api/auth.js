@@ -163,7 +163,7 @@ authRouter.post("/register", async (req, res) => {
   });
 });
 
-// @route GET api/auth/facebookLogin
+// @route GET apifacebookLogin
 // @description Post
 // @access Public
 authRouter.post("/facebookLogin", async (req, res) => {
@@ -240,25 +240,27 @@ authRouter.post("/login", async (req, res) => {
     return res.status(400).json({ msg: "Please enter your password" });
   }
 
-  const user = await User.findOne({ email }).select("+password").populate([
-    {
-      path: "permission",
-      model: "permission",
-      select: "name",
-    },
-    {
-      path: "roles",
-      select: "name permission",
-      populate: { path: "permission", model: "permission", select: "name" },
-    },
-  ]);
+  const user = await User.findOne({ email })
+    .select("+password")
+    .populate([
+      {
+        path: "permission",
+        model: "permission",
+        select: "name",
+      },
+      {
+        path: "roles",
+        select: "name permission",
+        populate: { path: "permission", model: "permission", select: "name" },
+      },
+    ]);
   // const user = await User.findOne({email}).populate("permissions")
 
   if (!user) {
     return res.status(400).json({ msg: "User not found" });
   }
 
-  console.log("password, user", password, user.password)
+  console.log("password, user", password, user.password);
   //compare password
   const mathPassword = await bcrypt.compare(password, user.password);
 
@@ -329,6 +331,33 @@ authRouter.post("/editProfile", authMiddleware, async (req, res) => {
   }
 });
 
+async function createDeviceToken(user, tokenId) {
+  try {
+    if (tokenId) {
+      const deviceToken = await NSPH_DB.Service.findOne({
+        user: user._id,
+      });
+
+      if (!deviceToken) {
+        //if device token not exist in db
+        await NSPH_DB.Service.create({
+          token: tokenId,
+          user: user._id,
+        });
+      }
+
+      if (deviceToken) {
+        //if device token exist in db
+        await NSPH_DB.Service.findByIdAndUpdate(user._id, {
+          token: tokenId,
+        });
+      }
+    }
+  } catch (err) {
+    console.log("error in creating token", err);
+  }
+}
+
 authRouter.post("/guest/register", async (req, res, next) => {
   try {
     const { username } = req.body;
@@ -338,6 +367,7 @@ authRouter.post("/guest/register", async (req, res, next) => {
     });
 
     if (!req.body.isFacebookLogin) {
+      //if not facebook login
       if (oldUser) {
         throw {
           status: 400,
@@ -347,6 +377,7 @@ authRouter.post("/guest/register", async (req, res, next) => {
     }
 
     if (oldUser && req.body.isFacebookLogin) {
+      //if facebook login
       const token = jwt.sign(
         { username: username },
         process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
@@ -354,25 +385,20 @@ authRouter.post("/guest/register", async (req, res, next) => {
           expiresIn: "7d",
         }
       );
+      await createDeviceToken(oldUser, req.body.deviceToken);
       return returnResponse(res, { user: user, token: token });
     }
 
-    // .populate([
-    //   {
-    //     path: "permission",
-    //     model: "permission",
-    //     select: "name",
-    //   },
-    //   {
-    //     path: "roles",
-    //     select: "name permission",
-    //     populate: { path: "permission", model: "permission", select: "name" },
-    //   },
-    // ]);
     const newUser = await NSPH_DB.Users.create({
       username: username,
+      isFacebook: req.body.isFacebookLogin ? true : false,
       roles: ["63527da890113e06ec9965b3"], //guest user role id
     });
+
+    // tokens for push notification
+    if (req.body.deviceToken) {
+      await createDeviceToken(newUser, req.body.deviceToken);
+    }
 
     const user = await NSPH_DB.Users.findById(newUser._id).populate([
       {
