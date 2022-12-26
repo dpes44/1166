@@ -12,8 +12,8 @@ const getUserFromToken = async (token) => {
       // if (decoded.exp < Date.now()) {
       //     reject("Token Expired");
       // }
-      console.log("decoded user is", decoded);
       const user = await NSPH_DB.Users.findOne({ username: decoded.username });
+      console.log("decoded user is", decoded);
       if (!user) {
         reject("Invalid User");
       }

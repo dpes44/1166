@@ -33,14 +33,14 @@ module.exports = function (server) {
         "socket id is ",
         await NSPH_DB.Users.getSocketId(data.to || data.receiver)
       );
-      
+
       // emit message to  user
       let newMsg = message.toObject();
       newMsg["senderDetail"] = await NSPH_DB.Users.findById(
         data.from || data.sender,
         "username status firstname lastname email"
       );
-      sendNotification(data.to || data.receiver,newMsg );
+      // sendNotification(data.to || data.receiver,newMsg );
       io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
         "receive-msg",
         newMsg
@@ -69,6 +69,10 @@ module.exports = function (server) {
         "username status firstname lastname email"
       );
 
+      console.log(
+        "call to is ",
+        await NSPH_DB.Users.getSocketId(data.to || data.receiver)
+      );
       socket
         .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
         .emit("newCall", callDetail);
@@ -78,8 +82,6 @@ module.exports = function (server) {
       console.log("Answer Call", data);
       // let caller = data.caller;
       rtcMessage = data.rtcMessage;
-
-      console.log("answer call is", data);
       socket
         .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
         .emit("callAnswered", {
