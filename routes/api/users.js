@@ -214,6 +214,7 @@ router.post("/create", async (req, res, next) => {
       email: req.body.email,
       roles: roles,
       password: hashedPassword,
+      socketId: Date.now()
     });
 
     
