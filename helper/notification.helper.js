@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const sendNotification = async (userId) => {
+const sendNotification = async (userId, notificationData) => {
   try {
     const device = await NSPH_DB.Services.findOne({ user: userId });
     console.log("device ", device);
@@ -12,7 +12,7 @@ const sendNotification = async (userId) => {
       "AAAATlFe5aw:APA91bGgxMMESl2jidurlH4fwGjATRRPPgrBFhY0gZ97pxEZtoYPwZHLCMGfyQT8igJb-Yq-USNB4LoROqCxkyqPB4mLqF2eOTUYrb1HjVGCiNnCXPkrTZ-IPcv_00Y2DDvxxtTCjKc-";
     const data = {
       registration_ids: device.token ? [device.token] : FcmToken,
-      data: "sender object",
+      data: notificationData,
       notification: {
         title: "test ",
         body: "test ",
