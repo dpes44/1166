@@ -360,7 +360,7 @@ async function createDeviceToken(user, tokenId) {
 authRouter.post("/guest/register", async (req, res, next) => {
   try {
     const { username } = req.body;
-
+    console.log("req. body in guest register", req.body);
     const oldUser = await NSPH_DB.Users.findOne({
       username: username,
     });
