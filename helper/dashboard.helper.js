@@ -122,7 +122,8 @@ const getHourlyCallCount = async function () {
     const hourlyCall = await NSPH_DB.CallLog.find({
       date: {
         $gte: new Date(new Date().setHours(0, 0, 0, 0)),
-      },
+      }
+      
     });
 
     hourlyCall.forEach((call) => {

@@ -13,7 +13,7 @@ const router = require("express").Router();
 const currentDate = new Date();
 const startOfDay = new Date(
   currentDate.getFullYear(),
-  currentDate.getMonth(),
+  currentDate.getMonth(), 
   currentDate.getDate()
 );
 router.get("/data", async function (req, res, next) {
@@ -36,12 +36,22 @@ router.get("/data", async function (req, res, next) {
         recentCallLogs: [],
       },
     };
+
+    console.log("req.user", req.user.roles);
+    let condition = {};
+    console.log(req.user.roles.includes("6326d8693be0d13048de6b13"))
+    condition.facilitator = req.user._id;
+    if(req.user.roles.includes("6326d8693be0d13048de6b13")){
+      condition = {}
+    }
     // { $gt: new Date(new Date(startDate).setHours(00, 00, 00)), $lt: new Date(new Date(endDate).setHours(23, 59, 59)) }
     let totalUserCount = await getTotalUsersByRole();
     const totalGuestUserAddedToday = await getTotalGuestUserAddedToday();
 
     let hourCount = await getHourlyCallCount();
 
+
+ 
     // total call duration up to now
     let totalCallDurationToday = await getTotalCallDurationToday();
 
@@ -79,7 +89,7 @@ router.get("/data", async function (req, res, next) {
 
     //total call logs
 
-    return returnResponse(res, genderWiseCallCount);
+    return returnResponse(res, finalData);
     //write mongodb query to get total users, total call logs, total messages
     // write mongodb aggregate function to get total users and the total users added today
   } catch (err) {

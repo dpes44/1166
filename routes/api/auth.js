@@ -393,7 +393,6 @@ authRouter.post("/guest/register", async (req, res, next) => {
     let middlename = "";
     if (req.body.isFacebookLogin && req.body.name) {
       let name = req.body.name.split(" ");
-      console.log("name is ", name);
       if (name.length == 2) {
         firstname = name[0];
         lastname = name[1];
