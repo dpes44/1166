@@ -42,6 +42,7 @@ router.post("/add", async function (req, res, next) {
     customer.address = req.body.address;
     customer.phone = req.body.phone;
     await customer.save();
+
     const callLog = await NSPH_DB.CallLog.create({
       facilitator: facilitator._id,
       user: customer._id,
@@ -67,7 +68,7 @@ router.post("/add", async function (req, res, next) {
       note: req.body.note,
       totalTime: req.body.totalTime,
     });
-
+    console.log("call log is", callLog);
     res.json(callLog);
   } catch (err) {
     console.log("error is", err);
@@ -148,7 +149,7 @@ router.get("/list", async function (req, res, next) {
     if (query.page) {
       page = parseInt(query.page);
     }
-    let skip = page <= 1 ? 5 : (page - 1) * 5;
+    let skip =  (page - 1) * 5;
     // if (query.date) {
     //   filters.date = query.date;
     // }
@@ -213,6 +214,7 @@ router.get("/list", async function (req, res, next) {
         },
       ]);
 
+    console.log("data is", data)
     return returnResponse(res, {
       data: data,
       count: count,
