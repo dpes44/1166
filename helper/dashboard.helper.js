@@ -241,13 +241,13 @@ const getGenderWiseCall = async function () {
           },
         },
         {
-          $unwind: { path: "$user" },
+          $unwind: { path: "$user" }, 
         },
-        // {
-        //   $match: {
-        //     "user.gender": {$in: ["Male", "Female", "Other"]}
-        //   }
-        // },
+        {
+          $match: {
+            "user.gender": {$in: ["Male", "Female", "Other"]}
+          }
+        },
         {
           $group: {
             _id: "$user.gender",
@@ -255,7 +255,8 @@ const getGenderWiseCall = async function () {
           },
         },
       ]);
-  
+      
+      console.log("gender wise call ", genderWiseCall)
       let genderWiseCallCount = {};
   
       genderWiseCall.forEach((call) => {

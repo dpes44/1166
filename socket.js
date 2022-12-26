@@ -33,13 +33,14 @@ module.exports = function (server) {
         "socket id is ",
         await NSPH_DB.Users.getSocketId(data.to || data.receiver)
       );
-      sendNotification(data.to || data.receiver);
+      
       // emit message to  user
       let newMsg = message.toObject();
       newMsg["senderDetail"] = await NSPH_DB.Users.findById(
         data.from || data.sender,
         "username status firstname lastname email"
       );
+      sendNotification(data.to || data.receiver,newMsg );
       io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
         "receive-msg",
         newMsg

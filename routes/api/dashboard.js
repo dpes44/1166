@@ -79,7 +79,7 @@ router.get("/data", async function (req, res, next) {
 
     //total call logs
 
-    return returnResponse(res, finalData);
+    return returnResponse(res, genderWiseCallCount);
     //write mongodb query to get total users, total call logs, total messages
     // write mongodb aggregate function to get total users and the total users added today
   } catch (err) {

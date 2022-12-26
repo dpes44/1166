@@ -388,8 +388,29 @@ authRouter.post("/guest/register", async (req, res, next) => {
       return returnResponse(res, { user: oldUser, token: token });
     }
 
+    let firstname = "";
+    let lastname = "";
+    let middlename = "";
+    if (req.body.isFacebookLogin && req.body.name) {
+      let name = req.body.name.split(" ");
+
+      if (name.length == 2) {
+        firstname = name[0];
+        lastname = name[1];
+      } else if (name.length == 3) {
+        firstname = name[0];
+        middlename = name[1];
+        lastname = name[2];
+      } else if (name.length == 1) {
+        firstname = name[0];
+      }
+    }
+
     const newUser = await NSPH_DB.Users.create({
       username: username,
+      firstname: firstname,
+      middlename: middlename,
+      lastname: lastname,
       isFacebook: req.body.isFacebookLogin ? true : false,
       roles: ["63527da890113e06ec9965b3"], //guest user role id
     });
