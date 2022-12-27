@@ -281,6 +281,7 @@ authRouter.post("/login", async (req, res) => {
       user: {
         name: user.name,
         username: user.username,
+        firstname: user.firstname,
         _id: user._id,
         status: user.status,
         roles: user.roles,

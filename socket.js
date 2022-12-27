@@ -66,7 +66,7 @@ module.exports = function (server) {
 
       callDetail["senderDetail"] = await NSPH_DB.Users.findById(
         data.from || data.sender,
-        "username status firstname lastname email"
+        "username status firstname lastname middlename gender email"
       );
 
       console.log(

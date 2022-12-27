@@ -136,8 +136,8 @@ router.get("/roster/:userId", async (req, res, next) => {
     const datas = await NSPH_DB.ChatList.find({
       $or: [{ userOne: req.params.userId }, { userTwo: req.user._id }],
     })
-      .populate("userOne", "username email firstname _id onlineStatus")
-      .populate("userTwo", "username email firstname _id onlineStatus")
+      .populate("userOne", "username email firstname lastname middlename gender _id onlineStatus")
+      .populate("userTwo", "username email firstname lastname middlename gender  _id onlineStatus")
       .populate("message")
       .sort({ createdAt: 1 });
 
@@ -147,6 +147,9 @@ router.get("/roster/:userId", async (req, res, next) => {
         ? {
             username: user?.userTwo?.username,
             firstname: user?.userTwo?.firstname,
+            lastname: user?.userTwo?.lastname,
+            midddlename: user?.userTwo?.midddlename,
+            gender: user?.userTwo?.gender,
             email: user?.userTwo?.email,
             _id: user?.userTwo?._id,
             lastMessage: user?.message,
@@ -155,6 +158,9 @@ router.get("/roster/:userId", async (req, res, next) => {
         : {
             username: user?.userOne?.username,
             firstname: user?.userOne?.firstname,
+            lastname: user?.userOne?.lastname,
+            midddlename: user?.userOne?.midddlename,
+            gender: user?.userOne?.gender,
             email: user?.userOne?.email,
             _id: user?.userOne?._id,
             onlineStatus: user?.userOne?.onlineStatus,
