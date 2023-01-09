@@ -2,6 +2,9 @@
 const express = require("express");
 const { returnResponse } = require("../../helper/response.helper");
 const router = express.Router();
+const livekitApi = require("livekit-server-sdk");
+const AccessToken = livekitApi.AccessToken;
+const RoomServiceClient = livekitApi.RoomServiceClient;
 
 router.post("/add", async function (req, res, next) {
   try {
@@ -67,7 +70,7 @@ router.post("/add", async function (req, res, next) {
       supportThrough: req.body.supportThrough,
       note: req.body.note,
       totalTime: req.body.totalTime,
-    });
+    }); 
     console.log("call log is", callLog);
     res.json(callLog);
   } catch (err) {
@@ -149,7 +152,7 @@ router.get("/list", async function (req, res, next) {
     if (query.page) {
       page = parseInt(query.page);
     }
-    let skip =  (page - 1) * 5;
+    let skip = (page - 1) * 5;
     // if (query.date) {
     //   filters.date = query.date;
     // }
@@ -214,7 +217,7 @@ router.get("/list", async function (req, res, next) {
         },
       ]);
 
-    console.log("data is", data)
+    console.log("data is", data);
     return returnResponse(res, {
       data: data,
       count: count,
@@ -236,6 +239,27 @@ router.get("/facilitator", async function (req, res, next) {
   } catch (err) {
     console.log("error is", err);
     next(err);
+  }
+});
+
+router.get("/:roomName", async function (req, res, next) {
+  try {
+    // if this room doesn't exist, it'll be automatically created when the first
+    // client joins
+    const roomName = req.params.roomName;
+    // identifier to be used for participant.
+    // it's available as LocalParticipant.identity with livekit-client SDK
+    const participantName = "user-name" + Math.floor(Math.random() * 1000);
+
+    const at = new AccessToken("devkey", "secret", {
+      identity: participantName,
+    });
+    at.addGrant({ roomJoin: true, room: roomName });
+
+    const token = at.toJwt();
+    res.json({ token: token });
+  } catch (err) {
+    console.log("error is", err);
   }
 });
 module.exports = router;

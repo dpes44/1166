@@ -91,7 +91,7 @@ router.get("/list", async (req, res, next) => {
     //   .populate("roles")
     //   .sort({ createdAt: -1 });
 
-    const users = await NSPH_DB.Users.aggregate([ 
+    const users = await NSPH_DB.Users.aggregate([
       {
         $lookup: {
           from: "roles",
@@ -123,7 +123,6 @@ router.get("/list", async (req, res, next) => {
       },
     ]);
 
-
     return returnResponse(res, users);
   } catch (err) {
     console.log("error is", err);
@@ -131,16 +130,37 @@ router.get("/list", async (req, res, next) => {
   }
 });
 
+//add user location
+router.post("/location", async (req, res, next) => {
+  try {
+    const { latitude, longitude } = req.body;
+    const location = await NSPH_DB.UserLocation.create({
+      latitude,
+      longitude,
+      user: req.user._id,
+    });
+
+    return returnResponse(res, location);
+  } catch (error) {
+    console.log("error is", error);
+    next(error);
+  }
+});
 router.get("/roster/:userId", async (req, res, next) => {
   try {
     const datas = await NSPH_DB.ChatList.find({
       $or: [{ userOne: req.params.userId }, { userTwo: req.user._id }],
     })
-      .populate("userOne", "username email firstname lastname middlename gender _id onlineStatus")
-      .populate("userTwo", "username email firstname lastname middlename gender  _id onlineStatus")
+      .populate(
+        "userOne",
+        "username email firstname lastname middlename gender _id onlineStatus"
+      )
+      .populate(
+        "userTwo",
+        "username email firstname lastname middlename gender  _id onlineStatus"
+      )
       .populate("message")
       .sort({ createdAt: 1 });
-
 
     const rosters = datas.map(function (user) {
       return user.userOne._id == req.params.userId
@@ -220,10 +240,9 @@ router.post("/create", async (req, res, next) => {
       email: req.body.email,
       roles: roles,
       password: hashedPassword,
-      socketId: Date.now()
+      socketId: Date.now(),
     });
 
-    
     res.status(200).json(user);
     // res.status(200).json([]);
   } catch (err) {

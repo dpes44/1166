@@ -3,6 +3,9 @@ const socket = require("socket.io");
 const sendNotification = require("./helper/notification.helper");
 const { getUserFromToken } = require("./helper/token");
 const { checkTokenMiddleware } = require("./middleware/socket");
+const livekitApi = require("livekit-server-sdk");
+const AccessToken = livekitApi.AccessToken;
+const RoomServiceClient = livekitApi.RoomServiceClient;
 module.exports = function (server) {
   const io = socket(server, {
     cors: {
@@ -54,8 +57,25 @@ module.exports = function (server) {
     });
 
     socket.on("call", async (data) => {
-      console.log("call", data);
-      // let callee = data.name;
+      console.log("call name is ", data);
+      const roomName =
+        Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15);
+      const initiatorName = "user-name" + Math.floor(Math.random() * 1000);
+      const receiverName = "user-name" + Math.floor(Math.random() * 1000);
+
+      let initiatorToken = new AccessToken("devkey", "secret", {
+        identity: initiatorName,
+      });
+      let receiverToken = new AccessToken("devkey", "secret", {
+        identity: receiverName,
+      });
+      initiatorToken.addGrant({ roomJoin: true, room: roomName });
+      receiverToken.addGrant({ roomJoin: true, room: roomName });
+      initiatorToken = initiatorToken.toJwt();
+      receiverToken = receiverToken.toJwt();
+
+      // call detail
       let rtcMessage = data.rtcMessage;
       let callDetail = {
         from: data.from,
@@ -69,13 +89,17 @@ module.exports = function (server) {
         "username status firstname lastname middlename gender email"
       );
 
-      console.log(
-        "call to is ",
-        await NSPH_DB.Users.getSocketId(data.to || data.receiver)
-      );
+
+      socket.emit("initCallToken", {
+        ...callDetail,
+        token: initiatorToken,
+      });
       socket
         .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
-        .emit("newCall", callDetail);
+        .emit("newCall", {
+          ...callDetail,
+          token: receiverToken,
+        });
     });
 
     socket.on("answerCall", async (data) => {
