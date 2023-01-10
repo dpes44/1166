@@ -64,15 +64,25 @@ module.exports = function (server) {
       const initiatorName = "user-name" + Math.floor(Math.random() * 1000);
       const receiverName = "user-name" + Math.floor(Math.random() * 1000);
 
-      let initiatorToken = new AccessToken("devkey", "secret", {
-        identity: initiatorName,
-      });
-      let receiverToken = new AccessToken("devkey", "secret", {
-        identity: receiverName,
-      });
+      let initiatorToken = new AccessToken(
+        process.env.LIVEKIT_DEVKEY || "devkey",
+        process.env.LIVEKIT_SECRETKEY || "secret",
+        {
+          identity: initiatorName,
+        }
+      );
+
+      let receiverToken = new AccessToken(
+        process.env.LIVEKIT_DEVKEY || "devkey",
+        process.env.LIVEKIT_SECRETKEY || "secret",
+        {
+          identity: receiverName,
+        }
+      );
       initiatorToken.addGrant({ roomJoin: true, room: roomName });
       receiverToken.addGrant({ roomJoin: true, room: roomName });
       initiatorToken = initiatorToken.toJwt();
+      console.log("initiator token is ", initiatorToken);
       receiverToken = receiverToken.toJwt();
 
       // call detail
@@ -88,7 +98,6 @@ module.exports = function (server) {
         data.from || data.sender,
         "username status firstname lastname middlename gender email"
       );
-
 
       socket.emit("initCallToken", {
         ...callDetail,
