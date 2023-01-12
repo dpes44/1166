@@ -31,19 +31,13 @@ module.exports = function (server) {
         body: data.message || data.body,
       });
 
-      console.log("message is ", message);
-      console.log(
-        "socket id is ",
-        await NSPH_DB.Users.getSocketId(data.to || data.receiver)
-      );
-
       // emit message to  user
       let newMsg = message.toObject();
       newMsg["senderDetail"] = await NSPH_DB.Users.findById(
         data.from || data.sender,
         "username status firstname lastname email"
       );
-      // sendNotification(data.to || data.receiver,newMsg );
+      // sendNotification(data.to || data.receiver, newMsg);
       io.to(await NSPH_DB.Users.getSocketId(data.to || data.receiver)).emit(
         "receive-msg",
         newMsg
@@ -57,7 +51,7 @@ module.exports = function (server) {
     });
 
     socket.on("call", async (data) => {
-      console.log("call name is ", data);
+      console.log("data is ", data);
       const roomName =
         Math.random().toString(36).substring(2, 15) +
         Math.random().toString(36).substring(2, 15);
@@ -99,10 +93,19 @@ module.exports = function (server) {
         "username status firstname lastname middlename gender email"
       );
 
+      const message = new NSPH_DB.Messages({
+        sender: data.from || data.sender,
+        receiver: data.to || data.receiver,
+        type: "call",
+        body: receiverToken,
+      });
+
+      await message.save();
       socket.emit("initCallToken", {
         ...callDetail,
         token: initiatorToken,
       });
+
       socket
         .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
         .emit("newCall", {
@@ -126,10 +129,6 @@ module.exports = function (server) {
     });
 
     socket.on("busy", async (data) => {
-      // console.log("busy", data);
-      // let caller = data.caller;
-      // rtcMessage = data.rtcMessage;
-
       socket
         .to(await NSPH_DB.Users.getSocketId(data.to || data.receiver))
         .emit("busy", {
@@ -140,9 +139,6 @@ module.exports = function (server) {
     });
 
     socket.on("declineCall", async (data) => {
-      // console.log("Decline Call", data);
-      // // let caller = data.caller;
-      // rtcMessage = data.rtcMessage;
       console.log(
         "call is declined",
         await NSPH_DB.Users.findById(data.to || data.receiver)

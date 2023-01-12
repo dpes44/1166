@@ -1,6 +1,7 @@
 // models/User.js
 
 const mongoose = require("mongoose");
+const sendNotification = require("../helper/notification.helper");
 
 const MessageSchema = new mongoose.Schema(
   {
@@ -16,22 +17,32 @@ const MessageSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["text", "image", "video", "audio", "url"],
       default: "text",
     },
     body: {
       type: String,
     },
-    // seenAt time stamp 
+    // seenAt time stamp
     seen: {
       type: Date,
       required: false,
-      default: null
+      default: null,
     },
   },
   {
     timestamps: true,
   }
 );
+
+MessageSchema.post("save", async function (doc, next) {
+  // emit message to  user
+  let newMsg = doc.toObject();
+  newMsg["senderDetail"] = await NSPH_DB.Users.findById(
+    doc.sender,
+    "username status firstname lastname email"
+  );
+
+  sendNotification(newMsg);
+});
 
 module.exports = Message = mongoose.model("message", MessageSchema);
