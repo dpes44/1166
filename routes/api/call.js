@@ -4,7 +4,6 @@ const { returnResponse } = require("../../helper/response.helper");
 const router = express.Router();
 const livekitApi = require("livekit-server-sdk");
 const AccessToken = livekitApi.AccessToken;
-const RoomServiceClient = livekitApi.RoomServiceClient;
 
 router.post("/add", async function (req, res, next) {
   try {
@@ -24,10 +23,6 @@ router.post("/add", async function (req, res, next) {
       throw { status: 404, msg: "User not found." };
     }
 
-    // let oldUser = await NSPH_DB.Users.findOne({ email: req.body.email });
-    // if (oldUser) {
-    //   throw { status: 400, msg: "Email already registered." };
-    // }
     if (req.body.callFrom == "facilitator") {
       req.body.callFrom = facilitator._id;
       req.body.callTo = customer._id;
@@ -39,9 +34,7 @@ router.post("/add", async function (req, res, next) {
     customer.firstname = req.body.firstname;
     customer.middlename = req.body.middlename;
     customer.lastname = req.body.lastname;
-    // customer.email = req.body.email;
-    customer.gender = req.body.gender;
-    // customer.ageGroup = req.body.ageGroup;
+    customer.gender = req.body.gender;;
     customer.address = req.body.address;
     customer.phone = req.body.phone;
     await customer.save();
@@ -71,7 +64,6 @@ router.post("/add", async function (req, res, next) {
       note: req.body.note,
       totalTime: req.body.totalTime,
     }); 
-    console.log("call log is", callLog);
     res.json(callLog);
   } catch (err) {
     console.log("error is", err);

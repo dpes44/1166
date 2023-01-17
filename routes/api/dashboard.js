@@ -37,7 +37,6 @@ router.get("/data", async function (req, res, next) {
       },
     };
 
-    console.log("req.user", req.user.roles);
     let condition = {};
     console.log(req.user.roles.includes("6326d8693be0d13048de6b13"))
     condition.facilitator = req.user._id;
@@ -51,7 +50,7 @@ router.get("/data", async function (req, res, next) {
     let hourCount = await getHourlyCallCount();
 
 
- 
+  
     // total call duration up to now
     let totalCallDurationToday = await getTotalCallDurationToday();
 

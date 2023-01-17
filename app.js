@@ -64,8 +64,10 @@ app.use("/api/shift", authMiddleware, require("./routes/api/data/shift"));
 app.use("/api/permission", require("./routes/api/permission"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/message", authMiddleware, require("./routes/api/message"));
-app.use("/api/blog",authMiddleware, require("./routes/api/blog"));
-app.use("/api/dashboard",authMiddleware, require("./routes/api/dashboard"));
+app.use("/api/blog", authMiddleware, require("./routes/api/blog"));
+app.use("/api/dashboard", authMiddleware, require("./routes/api/dashboard"));
+app.use("/api/services", authMiddleware, require("./routes/api/services"));
+
 //API End
 
 const port = process.env.PORT || 8082;

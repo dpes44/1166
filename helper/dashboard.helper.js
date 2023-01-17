@@ -122,8 +122,7 @@ const getHourlyCallCount = async function () {
     const hourlyCall = await NSPH_DB.CallLog.find({
       date: {
         $gte: new Date(new Date().setHours(0, 0, 0, 0)),
-      }
-      
+      },
     });
 
     hourlyCall.forEach((call) => {
@@ -182,9 +181,10 @@ const getTotalCallDurationToday = async function () {
         },
       },
     ]);
-
     return data[0]?.totalCallTime || 0;
-  } catch (error) {}
+  } catch (error) {
+    console.log("error is ", error);
+  }
 };
 
 const getTotalCallDuration = async function () {
@@ -223,7 +223,7 @@ const getTotalCall = async function () {
           select: "username gender",
         },
       ])
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1 });
     return data;
   } catch (error) {
     console.log(error);
@@ -233,47 +233,47 @@ const getTotalCall = async function () {
 const getGenderWiseCall = async function () {
   try {
     let genderWiseCall = await NSPH_DB.CallLog.aggregate([
-        {
-          $lookup: {
-            from: "users", // Collection to join
-            localField: "user", // Field in the input documents
-            foreignField: "_id", // Field in the joined documents
-            as: "user", // Output array field
-          },
+      {
+        $lookup: {
+          from: "users", // Collection to join
+          localField: "user", // Field in the input documents
+          foreignField: "_id", // Field in the joined documents
+          as: "user", // Output array field
         },
-        {
-          $unwind: { path: "$user" }, 
+      },
+      {
+        $unwind: { path: "$user" },
+      },
+      {
+        $match: {
+          "user.gender": { $in: ["Male", "Female", "Other"] },
         },
-        {
-          $match: {
-            "user.gender": {$in: ["Male", "Female", "Other"]}
-          }
+      },
+      {
+        $group: {
+          _id: "$user.gender",
+          count: { $sum: 1 },
         },
-        {
-          $group: {
-            _id: "$user.gender",
-            count: { $sum: 1 },
-          },
-        },
-      ]);
-      
-      console.log("gender wise call ", genderWiseCall)
-      let genderWiseCallCount = {};
-  
-      genderWiseCall.forEach((call) => {
-        if (!genderWiseCallCount[call._id]) {
-          // adding total count
-          if (genderWiseCallCount["total"]) {
-            genderWiseCallCount["total"] =
-              genderWiseCallCount["total"] + call.count;
-          } else {
-            genderWiseCallCount["total"] = call.count;
-          }
-          genderWiseCallCount[call._id] = call.count;
-        }
-      });
+      },
+    ]);
 
-      return genderWiseCallCount;
+    console.log("gender wise call ", genderWiseCall);
+    let genderWiseCallCount = {};
+
+    genderWiseCall.forEach((call) => {
+      if (!genderWiseCallCount[call._id]) {
+        // adding total count
+        if (genderWiseCallCount["total"]) {
+          genderWiseCallCount["total"] =
+            genderWiseCallCount["total"] + call.count;
+        } else {
+          genderWiseCallCount["total"] = call.count;
+        }
+        genderWiseCallCount[call._id] = call.count;
+      }
+    });
+
+    return genderWiseCallCount;
   } catch (error) {}
 };
 
@@ -284,5 +284,5 @@ module.exports = {
   getTotalCallDurationToday,
   getTotalCallDuration,
   getTotalCall,
-  getGenderWiseCall
+  getGenderWiseCall,
 };
