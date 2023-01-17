@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const sendNotification = async (notificationData) => {
   try {
-    const device = await NSPH_DB.Services.findOne({ user: userId });
+    const device = await NSPH_DB.Service.findOne({ user: userId });
     // console.log("device ", device);
     const endpoint = "https://fcm.googleapis.com/fcm/send";
     const FcmToken = device && device.token ? [device.token] : [];
