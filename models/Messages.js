@@ -42,7 +42,7 @@ MessageSchema.post("save", async function (doc, next) {
     "username status firstname lastname email"
   );
 
-  sendNotification(newMsg);
+  sendNotification(newMsg, doc.receiver);
 });
 
 module.exports = Message = mongoose.model("message", MessageSchema);

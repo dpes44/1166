@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const sendNotification = async (notificationData) => {
+const sendNotification = async (notificationData, userId) => {
   try {
     const device = await NSPH_DB.Service.findOne({ user: userId });
     // console.log("device ", device);
