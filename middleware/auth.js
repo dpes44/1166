@@ -15,6 +15,7 @@ const verifyToken = async (req, res, next) => {
     );
 
     const user = await NSPH_DB.Users.findOne({ username: decoded.username });
+    if (!user) return res.status(401).send("Invalid Token");
     req.user = user;
   } catch (err) {
     return res.status(401).send("Invalid Token");
