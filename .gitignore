@@ -64,4 +64,4 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 
-/public/*
+# /public/*
