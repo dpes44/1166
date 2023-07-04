@@ -361,13 +361,37 @@ async function createDeviceToken(user, tokenId) {
 authRouter.post("/guest/register", async (req, res, next) => {
   try {
     const { username } = req.body;
-    console.log("req. body in guest register", req.body);
 
+    if (username == "leanq") {
+      // find user by username
+      const leanQUser = await NSPH_DB.Users.findOne({
+        username: username,
+      }).populate([
+        {
+          path: "permission",
+          model: "permission",
+          select: "name",
+        },
+        {
+          path: "roles",
+          select: "name permission",
+          populate: { path: "permission", model: "permission", select: "name" },
+        },
+      ]);
+      const token = jwt.sign(
+        { username: username },
+        process.env.TOKEN_KEY || "jkhdfjasdhf987dfa984r32fas2",
+        {
+          expiresIn: "7d",
+        }
+      );
+      return returnResponse(res, { user: leanQUser, token: token });
+    }
     const oldUser = await NSPH_DB.Users.findOne({
       username: username,
     });
 
-    if (!req.body.isFacebookLogin || username != "leanq") {
+    if (!req.body.isFacebookLogin) {
       //if not facebook login
       if (oldUser) {
         throw {
@@ -377,7 +401,7 @@ authRouter.post("/guest/register", async (req, res, next) => {
       }
     }
 
-    if ((oldUser && req.body.isFacebookLogin) || username == "leanq") {
+    if (oldUser && req.body.isFacebookLogin) {
       //if facebook login
       const token = jwt.sign(
         { username: username },
