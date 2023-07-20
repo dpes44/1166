@@ -8,7 +8,7 @@ const sendNotification = async (notificationData, userId) => {
     const FcmToken = device && device.token ? [device.token] : [];
 
     const serverKey =
-      "AAAATlFe5aw:APA91bGgxMMESl2jidurlH4fwGjATRRPPgrBFhY0gZ97pxEZtoYPwZHLCMGfyQT8igJb-Yq-USNB4LoROqCxkyqPB4mLqF2eOTUYrb1HjVGCiNnCXPkrTZ-IPcv_00Y2DDvxxtTCjKc-";
+      "AAAANp_od-k:APA91bEBMcqS2OHVxwHPBmsEH6GNu0Z_qVNBDwlXpyp6z_JhhhpKKo01kCiGpDdUA3OFVUJrT8twDJxX59L4bHv_-Qhz239C1kvxgnGtzgiro8aGk2oDARSEWSjwq4-SW30NIizUL8wc";
     const data = {
       registration_ids: FcmToken,
       data: notificationData,
@@ -29,6 +29,7 @@ const sendNotification = async (notificationData, userId) => {
   } catch (err) {
     console.log("err ", err);
   }
+
 };
 
 module.exports = sendNotification;
