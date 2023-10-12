@@ -43,6 +43,7 @@ router.get("/data", async function (req, res, next) {
     if (req.user?.roles?.includes("6326d8693be0d13048de6b13")) {
       condition = {};
     }
+
     // { $gt: new Date(new Date(startDate).setHours(00, 00, 00)), $lt: new Date(new Date(endDate).setHours(23, 59, 59)) }
     let totalUserCount = await getTotalUsersByRole();
     const totalGuestUserAddedToday = await getTotalGuestUserAddedToday();
@@ -64,7 +65,7 @@ router.get("/data", async function (req, res, next) {
       createdAt: { $gte: new Date(new Date().setHours(0, 0, 0, 0)) },
     }).countDocuments();
 
-    let totalCall = await getTotalCall();
+    let totalCall = await getTotalCall(condition);
 
     let genderWiseCallCount = await getGenderWiseCall();
     finalData.call.genderWiseCallCount = genderWiseCallCount;

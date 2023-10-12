@@ -202,9 +202,9 @@ const getTotalCallDuration = async function () {
   } catch (error) {}
 };
 
-const getTotalCall = async function () {
+const getTotalCall = async function (condition) {
   try {
-    const data = await NSPH_DB.CallLog.find()
+    const data = await NSPH_DB.CallLog.find(condition)
       .populate([
         {
           path: "callFrom",

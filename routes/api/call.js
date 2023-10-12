@@ -209,8 +209,8 @@ router.get("/list", async function (req, res, next) {
         },
       ]);
 
-    console.log("data is", data);
-    return returnResponse(res, {
+      console.log("count ", count)
+      return returnResponse(res, {
       data: data,
       count: count,
       page: page,
