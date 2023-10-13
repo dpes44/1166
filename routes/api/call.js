@@ -126,6 +126,7 @@ router.get("/data", async function (req, res, next) {
 router.get("/list", async function (req, res, next) {
   try {
     let page = 1;
+    let limit = 15;
     let filters = {};
     let query = req.query;
     if (query.facilitator) {
@@ -144,7 +145,7 @@ router.get("/list", async function (req, res, next) {
     if (query.page) {
       page = parseInt(query.page);
     }
-    let skip = (page - 1) * 5;
+    let skip = (page - 1) * limit;
     // if (query.date) {
     //   filters.date = query.date;
     // }
@@ -184,7 +185,7 @@ router.get("/list", async function (req, res, next) {
 
     const count = await NSPH_DB.CallLog.countDocuments(filters);
     const data = await NSPH_DB.CallLog.find(filters)
-      .limit(5)
+      .limit(limit)
       .skip(skip)
       .populate([
         {
@@ -209,7 +210,6 @@ router.get("/list", async function (req, res, next) {
         },
       ]);
 
-      console.log("count ", count)
       return returnResponse(res, {
       data: data,
       count: count,
